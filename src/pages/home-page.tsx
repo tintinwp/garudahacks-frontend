@@ -1,7 +1,7 @@
 import FireIcon from "@/components/icons/fire-icon"
 import Topbar from "@/components/topbar"
 import Circle from "@/components/ui/circle"
-import { FaStar } from 'react-icons/fa' 
+import { FaFlag, FaStar } from 'react-icons/fa' 
 import homeAnimation from '../animations/home.json'
 import Lottie from "react-lottie-player"
 
@@ -21,6 +21,20 @@ export default function HomePage() {
       return gapY[gap]
     }
   }
+  const getTopPercentage = (idx: number): string => {
+    const n = circleData.length;
+    if(idx === 0 || idx === n - 1){
+      return '0%'
+    }
+    const mid = Math.floor(n / 2);
+    const gapX: { [key: number]: string } = {1: '0%', 2: '0%'}
+    if(idx < mid) {
+      return gapX[idx]
+    } else {
+      const gap = n - 1 - idx
+      return gapX[gap]
+    }
+  }
   return (
     <div>
       <Topbar/>
@@ -35,10 +49,11 @@ export default function HomePage() {
         </div>
       </div>
       <div className="py-6">
-        <div className="relative flex flex-col gap-12">
+        <div className="relative flex flex-col gap-8">
           {circleData.map((circle, index) => 
-            <Circle key={index} style={{left: getLeftPercentage(index)}} className="translate-x-[-50%]">
-              <FaStar className="size-8 text-white"/>
+            <Circle
+            key={index} style={{left: getLeftPercentage(index)}} className="translate-x-[-50%]">
+              <FaStar className="size-7 text-white"/>
             </Circle>
           )}
           <div className="absolute size-[250px] right-10 top-[50%] translate-y-[-50%]">
@@ -48,6 +63,14 @@ export default function HomePage() {
               play
             />
           </div>
+        </div>
+        <div className="pt-[3.5rem] pb-3">
+          <Circle className="left-[50%] translate-x-[-50%] h-[50px] w-[200px]">
+            <div className="flex text-lg gap-2 center text-white font-semibold">
+              <FaFlag className="size-6"/>
+              <div className="">Finish</div>
+            </div>
+          </Circle>
         </div>
       </div>
     </div>

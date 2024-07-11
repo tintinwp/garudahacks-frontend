@@ -1,5 +1,3 @@
-import './PWABadge.css'
-
 import { useRegisterSW } from 'virtual:pwa-register/react'
 
 function PWABadge() {
@@ -38,8 +36,6 @@ function PWABadge() {
         <div className="PWABadge-toast">
           <div className="PWABadge-message">
             <span id="toast-message">New content available, click on reload button to update.</span>
-              
-              
           </div>
           <div className="PWABadge-buttons">
             <button className="PWABadge-toast-button" onClick={() => updateServiceWorker(true)}>Reload</button>

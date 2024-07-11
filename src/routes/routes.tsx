@@ -1,8 +1,8 @@
-import MainLayout from '@/components/main-layout'
 import { Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Page404 from '@/pages/errors/404'
-import { MAIN_ROUTES } from '../datas/route'
+import { MAIN_ROUTES } from '../datas/route.tsx'
+import MainLayout from '@/layouts/main-layout'
+import Page404 from '@/pages/404-page.tsx'
 
 export default function Routing() {
   return (

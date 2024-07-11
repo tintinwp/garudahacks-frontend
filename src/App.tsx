@@ -1,8 +1,12 @@
+import { BrowserRouter as RouterProvider } from "react-router-dom"
+import Routing from "./routes/routes"
 
 function App() {
   return (
     <>
-      Hello World
+      <RouterProvider>
+        <Routing/>
+      </RouterProvider>
     </>
   )
 }

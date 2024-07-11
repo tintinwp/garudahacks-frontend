@@ -1,8 +1,4 @@
 import { Progress } from '@/components/ui/progress'
-import HeavyText from '@/components/ui/text'
-import React from 'react'
-import QuestionTypeOne from './question-type-one'
-import QuestionTypeTwo from './question-type-two'
 import QuestionTypeThree from './question-type-three'
 
 export default function QuestionsPage() {

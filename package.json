@@ -12,6 +12,7 @@
   "dependencies": {
     "@radix-ui/react-progress": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.407.0",
@@ -19,7 +20,9 @@
     "react-dom": "^18.3.1",
     "react-icons": "^5.2.1",
     "react-lottie-player": "^2.0.0",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.24.1",
+    "react-spinners": "^0.14.1",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7"
   },

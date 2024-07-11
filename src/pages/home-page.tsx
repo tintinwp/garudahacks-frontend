@@ -21,20 +21,6 @@ export default function HomePage() {
       return gapY[gap]
     }
   }
-  const getTopPercentage = (idx: number): string => {
-    const n = circleData.length;
-    if(idx === 0 || idx === n - 1){
-      return '0%'
-    }
-    const mid = Math.floor(n / 2);
-    const gapX: { [key: number]: string } = {1: '0%', 2: '0%'}
-    if(idx < mid) {
-      return gapX[idx]
-    } else {
-      const gap = n - 1 - idx
-      return gapX[gap]
-    }
-  }
   return (
     <div>
       <Topbar/>

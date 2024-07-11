@@ -21,7 +21,8 @@ export default {
     },
     extend: {
       colors: { 
-        primary: '#FF9B19'
+        primary: '#FF9B19',
+        'primary-200': "#FF8400"
       },
       keyframes: {
         "accordion-down": {

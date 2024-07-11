@@ -4,8 +4,14 @@ import Circle from "@/components/ui/circle"
 import { FaFlag, FaStar } from 'react-icons/fa' 
 import homeAnimation from '../animations/home.json'
 import Lottie from "react-lottie-player"
+import useApi from "@/context/api-context"
+import { useQuery } from "react-query"
+import endpoints from "@/api/endpoint"
 
 export default function HomePage() {
+  const { data } = useQuery('unit', () => get(endpoints.unit.getUnit));
+  const { get } = useApi();
+  console.log('data : ', data)
   const circleData = [0,1,2,3,4]
   const getLeftPercentage = (idx: number): string => {
     const n = circleData.length;

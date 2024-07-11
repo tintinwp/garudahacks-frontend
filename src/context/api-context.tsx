@@ -1,14 +1,18 @@
-import { Endpoint } from "@/api/endpoint";
+import endpoints, { Endpoint } from "@/api/endpoint";
 import axios, { AxiosInstance } from "axios";
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import useLoading from "./loading-context";
 import { ChildrenOnly } from "@/types/children-only";
+import { GenerateUserResponse } from "@/types/backend/responses/generate-user-response";
+import { useQuery } from "react-query";
+import { User } from "@/types/backend/user";
 
-export type GetApi<T> = (endpoint: Endpoint, id?: string, queryParameter?: Record<string, string | number | boolean>) => Promise<BackendResponse<T> | null>;
+export type GetApi<T> = (endpoint: Endpoint, id?: string, queryParameter?: Record<string, string | number | boolean>) => Promise<T | null>;
 export type MutateApi<T> =(endpoint: Endpoint, data?: unknown, id?: string, successMessage?: string) => Promise<T | null>;
 
 interface ApiContext {
   get: GetApi<unknown>,
+  user: User | null | undefined;
   mutate: MutateApi<unknown>
 }
 
@@ -16,18 +20,27 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_API_URL;
 const apiContext = createContext<ApiContext>({} as ApiContext);
 
 export function ApiProvider({children}: ChildrenOnly){
-  function buildAxios(){
+
+  const [accessToken, setAccessToken] = useState<string>();
+  const { data: user } = useQuery<User | null, Error>('authMe', () => get<User>(endpoints.auth.me), {
+    enabled: !!accessToken
+  });
+
+  function buildAxios(token?: string){
     const instance =  axios.create({
-      baseURL: BACKEND_URL
+      baseURL: BACKEND_URL,
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     })
-    
+
     // Can do interceptor in here 
     return instance;
   }
   
   const api: AxiosInstance = useMemo(() => {
-    return buildAxios()
-  }, [])
+    return buildAxios(accessToken)
+  }, [accessToken])
 
   const { setIsLoading } = useLoading();
 
@@ -45,10 +58,10 @@ export function ApiProvider({children}: ChildrenOnly){
     return url;
   }
 
-  async function get<T>(endpoint: Endpoint, id?: string, queryParameter?: Record<string, string | number | boolean>): Promise<BackendResponse<T> | null>{
+  async function get<T>(endpoint: Endpoint, id?: string, queryParameter?: Record<string, string | number | boolean>): Promise<T | null>{
     try{
       const url = buildUrl(endpoint.url, id, queryParameter);
-      const response = await api.get<BackendResponse<T>>(url)
+      const response = await api.get<T>(url)
       return response.data
     } catch(err){
       console.log('[API Error]', err)
@@ -92,8 +105,19 @@ export function ApiProvider({children}: ChildrenOnly){
       } 
       return null
   }
+
+  async function fetchGuest(){
+    const resp = await mutate<GenerateUserResponse>(endpoints.auth.generateRequest)
+    if(resp){
+      setAccessToken(resp.access_token)
+    }
+  }
+
+  useEffect(() => {
+    fetchGuest();
+  }, [])
   
-  return <apiContext.Provider value={{ get, mutate }}>
+  return <apiContext.Provider value={{ get, mutate, user }}>
           {children}
     </apiContext.Provider>
 }

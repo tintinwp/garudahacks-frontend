@@ -1,14 +1,13 @@
-import tailwindcssAnimate from 'tailwindcss-animate';
-
+import tailwindcssAnimate from "tailwindcss-animate";
 
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -20,9 +19,10 @@ export default {
       },
     },
     extend: {
-      colors: { 
-        primary: '#FF9B19',
-        'primary-200': "#FF8400"
+      colors: {
+        primary: "#FF9B19",
+        "primary-200": "#FF8400",
+        "primary-with-opacity": "#FFE5CE",
       },
       keyframes: {
         "accordion-down": {
@@ -41,4 +41,4 @@ export default {
     },
   },
   plugins: [tailwindcssAnimate],
-}
+};

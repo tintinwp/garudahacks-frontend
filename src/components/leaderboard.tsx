@@ -12,22 +12,23 @@ interface LeaderboardProps {
   leaderboards: LeaderboardType[];
 }
 export const Leaderboard = ({ leaderboards }: LeaderboardProps) => {
+  const currUser = "user";
   return (
     <div className="flex justify-center">
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Ranking</TableHead>
-            <TableHead>Username</TableHead>
-            <TableHead>MMR</TableHead>
-          </TableRow>
-        </TableHeader>
         <TableBody>
           {leaderboards.map((data) => {
             return (
               <>
-                <TableRow key={data.username}>
-                  <TableCell>{data.ranking}</TableCell>
+                <TableRow
+                  className={`${
+                    data.username === currUser
+                      ? "bg-primary-with-opacity hover:bg-primary-with-opacity"
+                      : "hover:bg-white"
+                  } `}
+                  key={data.username}
+                >
+                  <TableCell className="text-primary">{data.ranking}</TableCell>
                   <TableCell>{data.username}</TableCell>
                   <TableCell>{data.mmr}</TableCell>
                 </TableRow>

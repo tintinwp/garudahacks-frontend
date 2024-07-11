@@ -22,11 +22,8 @@
     "react-lottie-player": "^2.0.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.24.1",
-<<<<<<< HEAD
     "react-spinners": "^0.14.1",
-=======
     "socket.io-client": "^4.7.5",
->>>>>>> play-page
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7"
   },

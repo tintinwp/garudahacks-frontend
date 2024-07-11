@@ -30,15 +30,25 @@ const authEndpoints:AuthEndpoint =  {
   me: createEndpoint('POST', '/auth/me')
 }
 
+interface LeaderboardEndpoint {
+  getPaginatedLeaderboard : Endpoint,
+  getRankedLeaderboard : Endpoint
+}
+const leaderboardEndpoint : LeaderboardEndpoint = {
+  getPaginatedLeaderboard : createEndpoint("GET", "/users"),
+  getRankedLeaderboard : createEndpoint("GET", "/rank")
+}
 
 interface EndpointList {
   auth: AuthEndpoint;
   unit: UnitEndpoint;
+  leaderboard : LeaderboardEndpoint;
 }
 
 const endpoints: EndpointList = {
   auth: authEndpoints,
-  unit: unitEndpoints
+  unit: unitEndpoints,
+  leaderboard : leaderboardEndpoint
 };
 
 export default endpoints;

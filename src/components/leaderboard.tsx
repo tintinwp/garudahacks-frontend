@@ -1,4 +1,7 @@
-import { Leaderboard as LeaderboardType } from "@/types/leaderboard";
+import {
+  LeaderboardRank,
+  Leaderboard as LeaderboardType,
+} from "@/types/leaderboard";
 import {
   Table,
   TableBody,
@@ -7,34 +10,47 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import useApi from "@/context/api-context";
+import { useEffect } from "react";
 
 interface LeaderboardProps {
-  leaderboards: LeaderboardType[];
+  leaderboards: LeaderboardType[] | LeaderboardRank[];
+  isRanked?: boolean;
 }
+const isLeaderboardRank = (
+  item: LeaderboardType | LeaderboardRank
+): item is LeaderboardRank => {
+  return (item as LeaderboardRank).rank !== undefined;
+};
 export const Leaderboard = ({ leaderboards }: LeaderboardProps) => {
-  const currUser = "user";
+  const { user } = useApi();
+
   return (
     <div className="flex justify-center">
       <Table>
         <TableBody>
-          {leaderboards.map((data) => {
-            return (
-              <>
-                <TableRow
-                  className={`${
-                    data.username === currUser
-                      ? "bg-primary-with-opacity hover:bg-primary-with-opacity"
-                      : "hover:bg-white"
-                  } `}
-                  key={data.username}
-                >
-                  <TableCell className="text-primary">{data.ranking}</TableCell>
-                  <TableCell>{data.username}</TableCell>
-                  <TableCell>{data.mmr}</TableCell>
-                </TableRow>
-              </>
-            );
-          })}
+          {user &&
+            leaderboards.map((data, i) => {
+              const isRanked = isLeaderboardRank(data);
+              return (
+                <>
+                  <TableRow
+                    className={`${
+                      data.username === user.username
+                        ? "bg-primary-with-opacity hover:bg-primary-with-opacity"
+                        : "hover:bg-white"
+                    } `}
+                    key={data.username}
+                  >
+                    <TableCell className="text-primary">
+                      {isRanked ? data.rank : i + 1}
+                    </TableCell>
+                    <TableCell>{data.username}</TableCell>
+                    <TableCell>{data.mmr}</TableCell>
+                  </TableRow>
+                </>
+              );
+            })}
         </TableBody>
       </Table>
     </div>

@@ -10,13 +10,13 @@ export interface FindingPlayPageProps {
 }
 
 export const FindingPlayPage = (props: FindingPlayPageProps) => {
-  const APIKEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOiI3ZTFhYjViZi0yZDFmLTQ0MjUtYWZhYS1lMTUyYjIxNGMwNzEiLCJ1c2VybmFtZSI6ImFkbWluQGdtYWlsLmNvbSJ9LCJpYXQiOjE3MjA3Mjc3MDYsImV4cCI6MTcyMDgxNDEwNn0.uqM8Mb2Ew7jOsvowkXJ9Sm6JtUkfktKCR7ZqHnOd2Kk";
-  const socket = io("https://zdfktn9g-8000.asse.devtunnels.ms/queues", {
+  const APIKEY = localStorage.getItem("zeus");
+  const socket = io(import.meta.env.VITE_BACKEND_WS_API_URL + "/queues", {
     extraHeaders: {
-      Authorization: APIKEY,
+      Authorization: APIKEY ?? "",
     },
   });
+
   useEffect(() => {
     socket.on("connect", () => {
       socket.on("queue-full", () => {

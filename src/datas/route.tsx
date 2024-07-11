@@ -26,6 +26,6 @@ export const DETAIL_ROUTES: Route[] = [
   },  
   {
     component: <QuestionsPage />,
-    link: "/questions",
+    link: "/questions/:id",
   },
 ];

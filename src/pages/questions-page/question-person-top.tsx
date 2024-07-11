@@ -17,7 +17,7 @@ export default function QuestionPersonTop() {
             </div>
         </div>
         <div className="center pt-20">
-          <img className='h-40' src='./hand-example.png'/>
+          <img className='h-40' src='https://upload.wikimedia.org/wikipedia/commons/2/27/Sign_language_A.svg'/>
         </div>
       </div>
   )

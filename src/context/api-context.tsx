@@ -12,16 +12,16 @@ export type MutateApi<T> =(endpoint: Endpoint, data?: unknown, id?: string, succ
 
 interface ApiContext {
   get: GetApi<unknown>,
-  user: User | null | undefined;
+  user: User | null | undefined,
   mutate: MutateApi<unknown>
 }
 
+const LOCAL_STORAGE_ACCESS_TOKEN_KEY = 'HANDY_KEY'
 const BACKEND_URL = import.meta.env.VITE_BACKEND_API_URL;
 const apiContext = createContext<ApiContext>({} as ApiContext);
 
 export function ApiProvider({children}: ChildrenOnly){
-
-  const [accessToken, setAccessToken] = useState<string>();
+  const [accessToken, setAccessToken] = useState<string | undefined>(localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY) ? localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY) as string : undefined);
   const { data: user } = useQuery<User | null, Error>('authMe', () => get<User>(endpoints.auth.me), {
     enabled: !!accessToken
   });
@@ -109,6 +109,7 @@ export function ApiProvider({children}: ChildrenOnly){
   async function fetchGuest(){
     const resp = await mutate<GenerateUserResponse>(endpoints.auth.generateRequest)
     if(resp){
+      localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, resp.access_token)
       setAccessToken(resp.access_token)
     }
   }

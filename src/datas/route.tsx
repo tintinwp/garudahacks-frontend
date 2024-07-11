@@ -6,19 +6,21 @@ import ProfilePage from "@/pages/profile-page";
 
 export const MAIN_ROUTES: Route[] = [
   {
-    component: <HomePage/>,
-    link: '/'
+    component: <HomePage />,
+    link: "/",
   },
   {
-    component: <LeaderboardPage/>,
-    link: '/leaderboard'
+    component: <LeaderboardPage />,
+    link: "/leaderboard",
   },
   {
-    component: <PlayPage/>,
-    link: '/play'
+    component: <ProfilePage />,
+    link: "/profile",
   },
+];
+export const DETAIL_ROUTES: Route[] = [
   {
-    component: <ProfilePage/>,
-    link: '/profile'
-  }
-]
+    component: <PlayPage />,
+    link: "/play",
+  },
+];

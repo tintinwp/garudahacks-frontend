@@ -9,8 +9,10 @@ import { useQuery } from "react-query"
 import endpoints from "@/api/endpoint"
 
 export default function HomePage() {
-  const { data } = useQuery('unit', () => get(endpoints.unit.getUnit));
-  const { get } = useApi();
+  const { get, user } = useApi();
+  const { data } = useQuery('unit', () => get(endpoints.unit.getUnit), {
+    enabled: !!user
+  });
   console.log('data : ', data)
   const circleData = [0,1,2,3,4]
   const getLeftPercentage = (idx: number): string => {

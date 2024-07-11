@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-import { HomePlayPage } from "./parts/play-page-home";
-import { FindingPlayPage } from "./parts/play-page-finding";
-import { MatchFoundPlayPage } from "./parts/play-page-match-found";
+import { HomePlayPage } from "./play-page-home";
+import { FindingPlayPage } from "./play-page-finding";
+import { MatchFoundPlayPage } from "./play-page-match-found";
 
 export default function PlayPage() {
   const [isFinding, setIsFinding] = useState<boolean>(false);

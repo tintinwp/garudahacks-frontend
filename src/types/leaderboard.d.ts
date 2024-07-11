@@ -1,5 +1,8 @@
 export interface Leaderboard{
     mmr:number,
     username : string,
-    ranking: number
+    id: string
 }
+export interface LeaderboardRank extends Leaderboard {
+    rank: number;
+  }

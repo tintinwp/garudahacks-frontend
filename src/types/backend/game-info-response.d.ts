@@ -7,5 +7,5 @@ export interface GameInfoResponse{
         successes: number[];
         skips: number[];
     }[],
-    expired: bigint,
+    expired: number,
 }

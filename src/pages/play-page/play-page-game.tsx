@@ -52,8 +52,10 @@ export const GamePlayPage = (props: GamePlayPageProps) => {
             </div>
           </div>
         </div>
-        {gameInformation && (
+
+        {gameInformation && user && (
           <TyperacerPlayPage
+            user={user}
             gameInformation={gameInformation}
             gameId={props.gameId}
           />

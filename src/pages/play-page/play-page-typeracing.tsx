@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
 import { io, Socket } from "socket.io-client";
 import TimerAnimation from "../../animations/timer-animation.json";
-import { skip } from "node:test";
+import { useNavigate } from "react-router-dom";
 
 interface TyperacerPlayPageProps {
   gameId: string;
@@ -27,10 +27,11 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   const socketRef = useRef<Socket | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [enemyCurrentIndex, setEnemyCurrentIndex] = useState<number>(0);
-  const [currentTimeDiff, setCurrentTimeDiff] = useState(0);
+  const [currentTimeDiff, setCurrentTimeDiff] = useState(1000);
   const [userGameInformation, setUserGameInformation] = useState<UserGameInfo>(
     props.userGameInformation
   );
+<<<<<<< HEAD
 
   const [refresh, setRefresh] = useState<boolean>(false);
 
@@ -38,6 +39,9 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
     setRefresh((prev) => !prev)
   }, [currentIndex])
 
+=======
+  const nav = useNavigate();
+>>>>>>> multiplayer-v3
   useEffect(() => {
     if (!socketRef.current) {
       socketRef.current = io(
@@ -54,18 +58,15 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
       );
 
       socketRef.current.on("connect", () => {
-        console.log("Connected to the server");
         socketRef.current!.on(
           "another-participant-success",
           (data: GameSuccessSkipResponse) => {
-            console.log(data);
             setEnemyCurrentIndex(data.index + 1);
           }
         );
         socketRef.current!.on(
           "another-participant-skip",
           (data: GameSuccessSkipResponse) => {
-            console.log(data);
             setEnemyCurrentIndex(data.index + 1);
           }
         );
@@ -96,6 +97,12 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   }, [props.expired]);
 
   useEffect(() => {
+    if (currentTimeDiff <= 0) {
+      nav("/home");
+    }
+  }, [currentTimeDiff]);
+
+  useEffect(() => {
     if (userGameInformation) {
       const userInformation = userGameInformation;
       const currentIndex =
@@ -107,14 +114,17 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   }, []);
 
   const predictOnVideo = (category: Category) => {
+<<<<<<< HEAD
     console.log('gesture : ', category.categoryName, ' socket ref : ', socketRef.current)
+=======
+    console.log(currentIndex);
+>>>>>>> multiplayer-v3
     if (socketRef.current) {
       console.log(`${category.categoryName.toUpperCase()} === ${props.questions.split("")[currentIndex].toUpperCase()}`)
       if (
         category.categoryName.toUpperCase() ==
         props.questions.split("")[currentIndex].toUpperCase()
       ) {
-        console.log("Success");
         socketRef.current.emit("participant-success", {
           gameId: props.gameId,
           index: currentIndex,
@@ -123,7 +133,11 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
           ...prevState,
           successes: [...prevState.successes, currentIndex],
         }));
+<<<<<<< HEAD
         // console.log('next index!')
+=======
+        console.log("Success beneran ini mah parah");
+>>>>>>> multiplayer-v3
         setCurrentIndex(currentIndex + 1);
       }
     }

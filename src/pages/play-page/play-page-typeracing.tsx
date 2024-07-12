@@ -34,9 +34,9 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
 
   const [refresh, setRefresh] = useState<boolean>(false);
 
-  useEffect(()=> {
-    setRefresh((prev) => !prev)
-  }, [currentIndex])
+  useEffect(() => {
+    setRefresh((prev) => !prev);
+  }, [currentIndex]);
 
   const nav = useNavigate();
   useEffect(() => {
@@ -94,10 +94,10 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   }, [props.expired]);
 
   useEffect(() => {
-    if (currentTimeDiff <= 0) {
+    if (currentTimeDiff <= 0 || currentIndex >= props.questions.length) {
       nav("/home");
     }
-  }, [currentTimeDiff]);
+  }, [currentTimeDiff, currentIndex]);
 
   useEffect(() => {
     if (userGameInformation) {
@@ -112,7 +112,11 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
 
   const predictOnVideo = (category: Category) => {
     if (socketRef.current) {
-      console.log(`${category.categoryName.toUpperCase()} === ${props.questions.split("")[currentIndex].toUpperCase()}`)
+      console.log(
+        `${category.categoryName.toUpperCase()} === ${props.questions
+          .split("")
+          [currentIndex].toUpperCase()}`
+      );
       if (
         category.categoryName.toUpperCase() ==
         props.questions.split("")[currentIndex].toUpperCase()
@@ -129,7 +133,6 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
       }
     }
   };
-
 
   const skipCharacter = () => {
     if (socketRef.current) {

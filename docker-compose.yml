@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  handy-fe:
+    container_name: handy-fe
+    image: handy-fe:2.0
+    build: .
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
+    name: web

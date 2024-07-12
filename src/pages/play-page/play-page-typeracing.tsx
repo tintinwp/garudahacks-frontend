@@ -27,7 +27,7 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   const socketRef = useRef<Socket | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [enemyCurrentIndex, setEnemyCurrentIndex] = useState<number>(0);
-  const [currentTimeDiff, setCurrentTimeDiff] = useState(0);
+  const [currentTimeDiff, setCurrentTimeDiff] = useState(1000);
   const [userGameInformation, setUserGameInformation] = useState<UserGameInfo>(
     props.userGameInformation
   );

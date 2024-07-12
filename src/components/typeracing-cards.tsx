@@ -1,4 +1,3 @@
-import { UserGameInfo } from "@/types/backend/game-info-response";
 import PlayerIcon from "./icons/player-icon";
 
 interface TyperacingCardProps {

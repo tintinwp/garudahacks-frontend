@@ -16,12 +16,14 @@ interface UnitEndpoint {
   getUnit: Endpoint;
   completeOn: Endpoint;
   getUnitQuestions: Endpoint;
+  createCompleteOn: Endpoint;
 }
 
 const unitEndpoints: UnitEndpoint =  {
   getUnit: createEndpoint('GET', '/units'),
   getUnitQuestions: createEndpoint('GET', '/units'),
-  completeOn: createEndpoint('GET', '/completeon')
+  completeOn: createEndpoint('GET', '/completeon'),
+  createCompleteOn: createEndpoint('POST', '/completeon')
 }
 
 interface AuthEndpoint { 

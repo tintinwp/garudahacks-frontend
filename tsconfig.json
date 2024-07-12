@@ -11,7 +11,7 @@
       ]
     },
     "baseUrl": ".",
-    
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -26,6 +26,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "src/pages/404-page/.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

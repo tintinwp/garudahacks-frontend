@@ -31,7 +31,7 @@ export const HomePlayPage = (props: HomePlayPageProps) => {
   }, [user]);
 
   return (
-    <>
+    <>  
       <div className="h-full overflow-y-scroll">
         <div className="center">
           <Lottie className="w-[80%]" animationData={PlayAnimation} play />

@@ -11,6 +11,7 @@ import { Unit } from "@/types/backend/unit"
 import { useNavigate } from "react-router-dom"
 import { useMemo, useState } from "react"
 import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
+import Loading from "@/components/ui/loading"
 
 export default function HomePage() {
   const { get, user } = useApi();
@@ -68,7 +69,7 @@ export default function HomePage() {
 
 
   if(isUnitLoading || isCompleteLoading || filteredData.length == 0) return <>
-
+  <Loading/>
   </>
 
   return (

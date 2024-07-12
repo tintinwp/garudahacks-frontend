@@ -107,10 +107,13 @@ export function ApiProvider({children}: ChildrenOnly){
   }
 
   async function fetchGuest(){
-    const resp = await mutate<GenerateUserResponse>(endpoints.auth.generateRequest)
-    if(resp){
-      localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, resp.access_token)
-      setAccessToken(resp.access_token)
+    const localStorageData = LOCAL_STORAGE_ACCESS_TOKEN_KEY;
+    if(!localStorageData) {
+      const resp = await mutate<GenerateUserResponse>(endpoints.auth.generateRequest)
+      if(resp){
+        localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, resp.access_token)
+        setAccessToken(resp.access_token)
+      }
     }
   }
 

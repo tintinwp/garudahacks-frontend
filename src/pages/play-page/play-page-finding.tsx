@@ -32,7 +32,7 @@ export const FindingPlayPage = (props: FindingPlayPageProps) => {
       <div className="h-full">
         <div className="h-full flex items-center justify-center">
           <div className="text-center">
-            <Lottie animationData={SearchAnimation} play />
+            <Lottie animationData={SearchAnimation} loop play />
             <p className="text-primary">Finding Match Making...</p>
           </div>
         </div>

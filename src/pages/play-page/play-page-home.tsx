@@ -33,7 +33,7 @@ export const HomePlayPage = (props: HomePlayPageProps) => {
     <>  
       <div className="h-full overflow-y-scroll flex flex-col justify-around">
         <div className="center">
-          <Lottie className="w-[80%]" animationData={PlayAnimation} play />
+          <Lottie className="w-[80%]" loop animationData={PlayAnimation} play />
         </div>
         <div className="h-1/5">
           <Leaderboard isShowImage={false} leaderboards={leaderboardRank} isRanked={true} />

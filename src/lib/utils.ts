@@ -62,3 +62,11 @@ export function checkUser(user: User | Leaderboard): User | Leaderboard {
   }
   return user;
 }
+
+export function checkingText(a: string, b: string){
+  a = a.toUpperCase()
+  b = b.toUpperCase()
+  if(a == '0'  && b == 'O') return true
+  if(a == 'O' && b == '0') return true
+  return a == b;
+}

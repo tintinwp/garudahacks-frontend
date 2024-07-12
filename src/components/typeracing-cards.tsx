@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import PlayerIcon from "./icons/player-icon";
 
 interface TyperacingCardProps {
@@ -24,7 +25,7 @@ export const TyperacingCard = (props: TyperacingCardProps) => {
   return (
     <div className="p-2 relative text-center text-3xl" key={props.questionChr}>
       <PlayerIcon
-        className="size-6 absolute translate-y-[-50%] top-0 left-[50%] translate-x-[-50%]"
+        className={cn(['size-6 absolute translate-y-[-50%] top-0 left-[50%] translate-x-[-50%]', (props.isCurrent && props.enemyCurrentIndex === props.index  && props.userCurrentIndex !== props.index) && 'opacity-20'])}
         hidden={!props.isCurrent}
       />
       <p className={getTextColor()}>{props.questionChr}</p>

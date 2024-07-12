@@ -1,5 +1,6 @@
 import HeavyText from '@/components/ui/text'
 import Video from '@/components/ui/video'
+import { checkingText } from '@/lib/utils';
 import { nextQuestion } from '@/redux/slice';
 import { StoreState } from '@/redux/store';
 import { Category } from '@mediapipe/tasks-vision'
@@ -26,7 +27,7 @@ export default function QuestionTypeOne() {
       }
       <div className="h-full mt-3">
         <Video onGetGesture={(gesture) => {
-          if(gesture.categoryName.toUpperCase() === question?.questionAnswer.toUpperCase()) {
+          if(checkingText(gesture.categoryName, question!.questionAnswer)) {
             dispatch(nextQuestion(true))
           }
           setGesture(gesture)

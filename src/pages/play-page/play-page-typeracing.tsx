@@ -5,12 +5,13 @@ import Video from "@/components/ui/video";
 import { UserGameInfo } from "@/types/backend/game-info-response";
 import { GameSuccessSkipResponse } from "@/types/backend/game-success-skip-response";
 import { User } from "@/types/backend/user";
-import { Category } from "@mediapipe/tasks-vision";
+import { Category, GestureRecognizer } from "@mediapipe/tasks-vision";
 import { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
 import { io, Socket } from "socket.io-client";
 import TimerAnimation from "../../animations/timer-animation.json";
 import { useNavigate } from "react-router-dom";
+import { checkingText } from "@/lib/utils";
 
 interface TyperacerPlayPageProps {
   gameId: string;
@@ -26,6 +27,7 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   );
   const socketRef = useRef<Socket | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [gesture, setGesture] = useState<Category>();
   const [enemyCurrentIndex, setEnemyCurrentIndex] = useState<number>(0);
   const [currentTimeDiff, setCurrentTimeDiff] = useState(1000);
   const [userGameInformation, setUserGameInformation] = useState<UserGameInfo>(
@@ -111,15 +113,14 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   }, []);
 
   const predictOnVideo = (category: Category) => {
+    setGesture(category)
     if (socketRef.current) {
       console.log(
         `${category.categoryName.toUpperCase()} === ${props.questions
-          .split("")
-          [currentIndex].toUpperCase()}`
+          .charAt(currentIndex).toString().toUpperCase()}`
       );
       if (
-        category.categoryName.toUpperCase() ==
-        props.questions.split("")[currentIndex].toUpperCase()
+        checkingText(category.categoryName, props.questions.charAt(currentIndex).toString())
       ) {
         socketRef.current.emit("participant-success", {
           gameId: props.gameId,
@@ -151,7 +152,7 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   return (
     <div className="flex flex-col h-full">
       <div className="flex text-center w-full items-center justify-center">
-        <Lottie animationData={TimerAnimation} className="size-8" play />
+        <Lottie loop animationData={TimerAnimation} className="size-8" play />
         {currentTimeDiff}
       </div>
       <div className="h-1/3 flex justify-center items-center flex-wrap p-2">
@@ -183,6 +184,9 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
       <div className="p-4">
         <Separator className="bg-gray-400" />
       </div>
+      {gesture &&
+        <div className="text-primary text-center mt-3 text-lg">You are signing letter <span className='font-bold'>{gesture?.categoryName}</span></div>
+      }
       <div className="p-4 w-full h-full">
         <Video refresh={refresh} onGetGesture={predictOnVideo} />
       </div>

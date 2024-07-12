@@ -13,7 +13,7 @@ export const MatchFoundPlayPage = (props: MatchFoundPlayPageProps) => {
       <div className="bg-primary rounded-tl-[275px] rounded-br-[275px] h-full">
         <div className="flex h-full justify-center items-center">
           <div>
-            <Lottie animationData={MatchFoundAnimation} play />
+            <Lottie loop animationData={MatchFoundAnimation} play />
             <div className="text-center text-5xl text-white font-bold italic">
               Match Found
             </div>

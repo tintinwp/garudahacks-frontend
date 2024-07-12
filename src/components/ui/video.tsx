@@ -1,13 +1,12 @@
 import {
   Category,
+  FilesetResolver, GestureRecognizer
 } from "@mediapipe/tasks-vision";
 import { useEffect, useRef } from "react";
 import Webcam from "react-webcam";
-import drawUtils from "@mediapipe/drawing_utils";
+import { drawConnectors, drawLandmarks} from '@mediapipe/drawing_utils';
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
 import useLoading from "@/context/loading-context";
-
-console.log('Draw Utils : ', drawUtils)
 
 interface VideoProps {
   onGetGesture?: (gesture: Category) => void;
@@ -27,7 +26,7 @@ export default function Video({ onGetGesture, refresh = false }: VideoProps) {
         window.cancelAnimationFrame(id);
       }
     }
-   cancelAllAnimationFrames()
+    cancelAllAnimationFrames()
     predict()
   }
 
@@ -36,7 +35,10 @@ export default function Video({ onGetGesture, refresh = false }: VideoProps) {
   }, [refresh, recognizer, webcamRef, canvasRef, divRef, onGetGesture])
 
   function predict() {
-    console.log('Predicting ...')
+
+    // console.log('[Predict] Draw Utils ...', drawUtils)
+    // console.log('[Predict] Draw Connectors ...', drawUtils.drawConnectors)
+    // console.log(' ...', drawUtils.drawLandmarks)
     if (
       !recognizer ||
       !webcamRef.current ||
@@ -99,11 +101,11 @@ export default function Video({ onGetGesture, refresh = false }: VideoProps) {
         landmarks[i].visibility = 1;
       }
 
-      drawUtils.drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
+      if(drawConnectors) drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
         color: "#00ffff",
         lineWidth: 2,
       });
-      drawUtils.drawLandmarks(ctx, landmarks, {
+      if(drawLandmarks) drawLandmarks(ctx, landmarks, {
         color: "#ffff29",
         lineWidth: 1,
       });

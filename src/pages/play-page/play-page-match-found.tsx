@@ -9,8 +9,8 @@ export const MatchFoundPlayPage = (props: MatchFoundPlayPageProps) => {
     setTimeout(() => props.setIsPlaying(true), 3000);
   });
   return (
-    <div className="h-full">
-      <div className="bg-primary rounded-tl-full rounded-br-full h-full">
+    <div className="h-full bg-primary-200">
+      <div className="bg-primary rounded-tl-[275px] rounded-br-[275px] h-full">
         <div className="flex h-full justify-center items-center">
           <div>
             <Lottie animationData={MatchFoundAnimation} play />

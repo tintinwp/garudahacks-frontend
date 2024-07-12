@@ -1,28 +1,36 @@
-import FireIcon from "@/components/icons/fire-icon"
-import Topbar from "@/components/topbar"
-import Circle from "@/components/ui/circle"
-import { FaFlag, FaStar } from 'react-icons/fa' 
-import homeAnimation from '../animations/home.json'
-import Lottie from "react-lottie-player"
-import useApi from "@/context/api-context"
-import { useQuery } from "react-query"
-import endpoints from "@/api/endpoint"
-import { Unit } from "@/types/backend/unit"
-import { Link } from "react-router-dom"
+import FireIcon from "@/components/icons/fire-icon";
+import Topbar from "@/components/topbar";
+import Circle from "@/components/ui/circle";
+import { FaFlag, FaStar } from "react-icons/fa";
+import homeAnimation from "../animations/home.json";
+import Lottie from "react-lottie-player";
+import useApi from "@/context/api-context";
+import { useQuery } from "react-query";
+import endpoints from "@/api/endpoint";
+import { Unit } from "@/types/backend/unit";
+import { Link } from "react-router-dom";
 
 export default function HomePage() {
   const { get, user } = useApi();
-  const { data: unitData } = useQuery<Unit[], Error>('unit', () => get(endpoints.unit.getUnit) as Promise<Unit[]>, {
-    enabled: !!user
-  });
-  const { data: completeOnData } = useQuery('completeOnUnits', () => get(endpoints.unit.completeOn), {
-    enabled: unitData ? unitData.length > 0 : false
-  });
+  const { data: unitData } = useQuery<Unit[], Error>(
+    "unit",
+    () => get(endpoints.unit.getUnit) as Promise<Unit[]>,
+    {
+      enabled: !!user,
+    }
+  );
+  const { data: completeOnData } = useQuery(
+    "completeOnUnits",
+    () => get(endpoints.unit.completeOn),
+    {
+      enabled: unitData ? unitData.length > 0 : false,
+    }
+  );
   const getLeftPercentage = (idx: number): string => {
-    if(!unitData) return ''
+    if (!unitData) return "";
     const n = unitData.length;
-    if(idx === 0 || idx === n - 1){
-      return '46%'
+    if (idx === 0 || idx === n - 1) {
+      return "46%";
     }
     const mid = Math.floor(n / 2);
     const gapY: { [key: number]: string } = { 1: "30%", 2: "24%" };
@@ -48,14 +56,17 @@ export default function HomePage() {
       </div>
       <div className="py-6">
         <div className="relative flex flex-col gap-8">
-          {unitData?.map((unit, index) => 
-              <Link key={index} to={`/questions/${unit.id}`}>
-                <Circle
-                key={index} style={{left: getLeftPercentage(index)}} className="translate-x-[-50%]">
-                  <FaStar className="size-7 text-white"/>
-                </Circle>
-              </Link>
-          )}
+          {unitData?.map((unit, index) => (
+            <Link key={index} to={`/questions/${unit.id}`}>
+              <Circle
+                key={index}
+                style={{ left: getLeftPercentage(index) }}
+                className="translate-x-[-50%]"
+              >
+                <FaStar className="size-7 text-white" />
+              </Circle>
+            </Link>
+          ))}
           <div className="absolute size-[250px] right-10 top-[50%] translate-y-[-50%]">
             <Lottie loop animationData={homeAnimation} play />
           </div>

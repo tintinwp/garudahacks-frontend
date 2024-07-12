@@ -1,9 +1,7 @@
 import {
   Category,
-  FilesetResolver,
-  GestureRecognizer,
 } from "@mediapipe/tasks-vision";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Webcam from "react-webcam";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
@@ -28,7 +26,7 @@ export default function Video({ onGetGesture, refresh = false }: VideoProps) {
       }
     }
    cancelAllAnimationFrames()
-  predict()
+    predict()
   }
 
   useEffect(() => {
@@ -36,6 +34,7 @@ export default function Video({ onGetGesture, refresh = false }: VideoProps) {
   }, [refresh, recognizer, webcamRef, canvasRef, divRef, onGetGesture])
 
   function predict() {
+    console.log('Predicting ...')
     if (
       !recognizer ||
       !webcamRef.current ||
@@ -43,10 +42,15 @@ export default function Video({ onGetGesture, refresh = false }: VideoProps) {
       !canvasRef.current ||
       !divRef.current
     ) {
+      console.log('return 1')
       return;
     }
     
     if (webcamRef.current.video.readyState !== 4) {
+      webcamRef.current.video.addEventListener('loadeddata', () => {
+        predict()
+      })
+      console.log('return 2')
       return;
     }
 
@@ -133,7 +137,7 @@ export default function Video({ onGetGesture, refresh = false }: VideoProps) {
     >
       <Webcam
         ref={webcamRef}
-        className="overflow-hidden rounded-xl absolute top-0 left-0 w-full h-full"
+        className="overflow-hidden rounded-xl absolute top-0 left-0 w-full h-full transform rotateY(180deg)"
       />
       <canvas
         ref={canvasRef}

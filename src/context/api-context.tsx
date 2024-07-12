@@ -1,5 +1,5 @@
 import endpoints, { Endpoint } from "@/api/endpoint";
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import useLoading from "./loading-context";
 import { ChildrenOnly } from "@/types/children-only";
@@ -15,12 +15,10 @@ import {
   AlertDialogHeader,
 } from "@/components/ui/alert-dialog";
 import {
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { AlertDialogAction } from "@radix-ui/react-alert-dialog";
 import { useNavigate } from "react-router-dom";
 
@@ -37,10 +35,10 @@ export type MutateApi<T> = (
 ) => Promise<T | null>;
 
 interface ApiContext {
-  get: GetApi<any>;
-  user: User | null | undefined;
-  mutate: MutateApi<any>;
-  login: (payload: LoginPayload | RegisterPayload) => Promise<void>;
+  get: GetApi<any>,
+  user: User | null | undefined,
+  mutate: MutateApi<any>,
+  login: (payload: LoginPayload | RegisterPayload) => Promise<boolean>
   logout: () => void;
   refetchUser: () => void;
 }
@@ -166,17 +164,17 @@ export function ApiProvider({ children }: ChildrenOnly) {
     return null;
   }
 
-  async function login(payload: LoginPayload | RegisterPayload) {
-    const response = await mutate<GenerateUserResponse>(
-      endpoints.auth.login,
-      payload
-    );
-    if (response) {
-      localStorage.setItem(
-        LOCAL_STORAGE_ACCESS_TOKEN_KEY,
-        response.access_token
-      );
-      setAccessToken(response.access_token);
+  async function login(payload: LoginPayload | RegisterPayload){
+    try{
+      const response = await api.post<any, AxiosResponse<GenerateUserResponse>>(endpoints.auth.login.url, payload)
+      if(!response.data) {
+        throw new Error('')
+      }
+      localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, response.data.access_token)
+      setAccessToken(response.data.access_token)
+      return true
+    } catch (err){
+      return false
     }
   }
 
@@ -199,6 +197,10 @@ export function ApiProvider({ children }: ChildrenOnly) {
       }
     }
   }
+
+  useEffect(()=> {
+    refetch()
+  }, [accessToken])
 
   useEffect(() => {
     fetchGuest();

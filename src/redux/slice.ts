@@ -30,7 +30,6 @@ const slice = createSlice({
       state.questionFinish = false;
     },
     setQuestions(state, action: PayloadAction<Question[]>) {
-      action.payload = action.payload.slice(0, 3);
       for(const question of action.payload) {
         const randomQuestionType = QUESTION_TYPE[Math.floor(Math.random() * QUESTION_TYPE.length)]
         question.type = randomQuestionType 
@@ -50,9 +49,7 @@ const slice = createSlice({
       }
       state.questionIndex += 1
       state.question = state.questions[state.questionIndex]
-      if(state.question) { 
-        console.log('Answer : ', state.question.questionAnswer)
-      }
+
     }
   },
 });

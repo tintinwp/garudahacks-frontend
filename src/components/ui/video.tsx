@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
+import useLoading from "@/context/loading-context";
 
 interface VideoProps {
   onGetGesture?: (gesture: Category) => void;
@@ -17,23 +18,22 @@ export default function Video({ onGetGesture, refresh = false }: VideoProps) {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
-  const [recognizer, setRecognizer] = useState<GestureRecognizer>();
+  const { recognizer } = useLoading()
 
   function refreshPredict(){
-
     function cancelAllAnimationFrames(){
       let id = window.requestAnimationFrame(function(){});
       while(id--){
         window.cancelAnimationFrame(id);
       }
-   }
+    }
    cancelAllAnimationFrames()
-    predict()
+  predict()
   }
 
   useEffect(() => {
-refreshPredict()
-  }, [refresh])
+    refreshPredict()
+  }, [refresh, recognizer, webcamRef, canvasRef, divRef, onGetGesture])
 
   function predict() {
     if (
@@ -45,7 +45,7 @@ refreshPredict()
     ) {
       return;
     }
-
+    
     if (webcamRef.current.video.readyState !== 4) {
       return;
     }
@@ -106,37 +106,25 @@ refreshPredict()
     requestAnimationFrame(predict);
   }
 
-  async function loadRecognizer() {
-    const vision = await FilesetResolver.forVisionTasks(
-      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
-    );
-    const recognizer = await GestureRecognizer.createFromOptions(vision, {
-      baseOptions: {
-        modelAssetPath: "/model.task",
-        delegate: "CPU",
-      },
-      numHands: 2,
-      runningMode: "VIDEO",
-    });
-    setRecognizer(recognizer);
-  }
+  // async function loadRecognizer() {
+  //   const vision = await FilesetResolver.forVisionTasks(
+  //     "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+  //   );
+  //   const recognizer = await GestureRecognizer.createFromOptions(vision, {
+  //     baseOptions: {
+  //       modelAssetPath:  import.meta.env.VITE_BACKEND_API_URL  + "/model.task",
+  //       delegate: "CPU",
+  //     },
+  //     numHands: 2,
+  //     runningMode: "VIDEO",
+  //   });
+  //   predict(recognizer)
+  // }
 
-  useEffect(() => {
-    if (webcamRef.current && webcamRef.current.video) {
-      webcamRef.current.video.addEventListener("loadeddata", () => {
-        predict();
-      });
-    }
-    return () => {
-      if (webcamRef.current && webcamRef.current.video) {
-        webcamRef.current.video.removeEventListener("loadeddata", predict);
-      }
-    };
-  }, [recognizer]);
 
-  useEffect(() => {
-    loadRecognizer();
-  }, []);
+  // useEffect(() => {
+  //   loadRecognizer();
+  // }, []);
 
   return (
     <div

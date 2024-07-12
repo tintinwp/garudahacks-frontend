@@ -2,20 +2,22 @@ import { TyperacingCard } from "@/components/typeracing-cards";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Video from "@/components/ui/video";
-import { GameInfoResponse } from "@/types/backend/game-info-response";
+import { UserGameInfo } from "@/types/backend/game-info-response";
 import { GameSuccessSkipResponse } from "@/types/backend/game-success-skip-response";
 import { User } from "@/types/backend/user";
 import { Category } from "@mediapipe/tasks-vision";
-import { userInfo } from "os";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
 import { io, Socket } from "socket.io-client";
 import TimerAnimation from "../../animations/timer-animation.json";
+import { skip } from "node:test";
 
 interface TyperacerPlayPageProps {
   gameId: string;
-  gameInformation: GameInfoResponse;
   user: User;
+  expired: number;
+  questions: string;
+  userGameInformation: UserGameInfo;
 }
 
 export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
@@ -24,7 +26,11 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   );
   const socketRef = useRef<Socket | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-
+  const [enemyCurrentIndex, setEnemyCurrentIndex] = useState<number>(0);
+  const [currentTimeDiff, setCurrentTimeDiff] = useState(0);
+  const [userGameInformation, setUserGameInformation] = useState<UserGameInfo>(
+    props.userGameInformation
+  );
   useEffect(() => {
     if (!socketRef.current) {
       socketRef.current = io(
@@ -46,12 +52,14 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
           "another-participant-success",
           (data: GameSuccessSkipResponse) => {
             console.log(data);
+            setEnemyCurrentIndex(data.index + 1);
           }
         );
         socketRef.current!.on(
           "another-participant-skip",
           (data: GameSuccessSkipResponse) => {
             console.log(data);
+            setEnemyCurrentIndex(data.index + 1);
           }
         );
       });
@@ -65,11 +73,9 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
     };
   }, [APIKEY, props.gameId]);
 
-  const [currentTimeDiff, setCurrentTimeDiff] = useState(0);
-
   useEffect(() => {
     const updateTimeDiff = () => {
-      const expiredTime = props.gameInformation.expired; // Unix time in seconds
+      const expiredTime = props.expired; // Unix time in seconds
       const currentTime = Math.floor(Date.now()); // Current time in Unix timestamp (seconds)
       const diffSeconds = expiredTime - currentTime;
       setCurrentTimeDiff(Math.round(diffSeconds / 1000));
@@ -80,17 +86,16 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
     const intervalId = setInterval(updateTimeDiff, 1000); // Update every second
 
     return () => clearInterval(intervalId); // Cleanup interval on unmount
-  }, [props.gameInformation.expired]);
+  }, [props.expired]);
 
   useEffect(() => {
-    const userInformation = props.gameInformation.gameParticipants.filter(
-      (participant) => participant.userId === props.user.id
-    );
-    console.log(userInformation);
-    const currentIndex =
-      userInformation[0].skips.length + userInformation[0].successes.length - 1;
-    if (currentIndex >= 0) {
-      setCurrentIndex(currentIndex);
+    if (userGameInformation) {
+      const userInformation = userGameInformation;
+      const currentIndex =
+        userInformation.skips.length + userInformation.successes.length - 1;
+      if (currentIndex >= 0) {
+        setCurrentIndex(currentIndex);
+      }
     }
   }, []);
 
@@ -98,13 +103,17 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
     if (socketRef.current) {
       if (
         category.categoryName.toUpperCase() ==
-        props.gameInformation.question.split("")[currentIndex].toUpperCase()
+        props.questions.split("")[currentIndex].toUpperCase()
       ) {
         console.log("Success");
         socketRef.current.emit("participant-success", {
           gameId: props.gameId,
           index: currentIndex,
         });
+        setUserGameInformation((prevState) => ({
+          ...prevState,
+          successes: [...prevState.successes, currentIndex],
+        }));
         setCurrentIndex((prev) => prev + 1);
       }
     }
@@ -117,9 +126,18 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
         gameId: props.gameId,
         index: currentIndex,
       });
+      setUserGameInformation((prevState) => ({
+        ...prevState,
+        skips: [...prevState.skips, currentIndex],
+      }));
       setCurrentIndex((prev) => prev + 1);
     }
   };
+
+  useEffect(() => {
+    console.log("Enemy current index  = " + enemyCurrentIndex);
+    console.log("User current index : " + currentIndex);
+  }, [enemyCurrentIndex, currentIndex]);
 
   return (
     <div className="flex flex-col h-full">
@@ -128,13 +146,21 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
         {currentTimeDiff}
       </div>
       <div className="h-1/3 flex justify-center items-center flex-wrap p-2">
-        {props.gameInformation.question.split("").map((chr) => {
-          return (
-            <>
-              <TyperacingCard questionChr={chr} />
-            </>
-          );
-        })}
+        {userGameInformation &&
+          props.questions.split("").map((chr, i) => {
+            return (
+              <TyperacingCard
+                key={i}
+                questionChr={chr}
+                isCurrent={enemyCurrentIndex === i || currentIndex === i}
+                userCurrentIndex={currentIndex}
+                enemyCurrentIndex={enemyCurrentIndex}
+                index={i}
+                successes={userGameInformation.successes}
+                skips={userGameInformation.skips}
+              />
+            );
+          })}
       </div>
 
       <div className="p-4">

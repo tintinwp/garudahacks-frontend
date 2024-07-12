@@ -47,7 +47,7 @@ export const HomePlayPage = (props: HomePlayPageProps) => {
                 leaderboardRank.length > 0 &&
                 leaderboardRank.filter(
                   (leaderboard) => leaderboard.username == user.username
-                )[0].rank}{" "}
+                )[0]?.rank}{" "}
               from the Leaderboard. Play more to increase your Rating.
             </div>
             <Button

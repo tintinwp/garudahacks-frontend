@@ -59,18 +59,16 @@ export default function Video({ onGetGesture }: VideoProps) {
         const gesture = result.gestures[0][0];
         if (gesture) {
           onGetGesture && onGetGesture(gesture);
-          // const {categoryName, score} = gesture;
-          // const categoryScore = parseFloat(
-          //   (score * 100).toString()
-          // ).toFixed(2);
-          // const handedness = result.handednesses[0][0].displayName;
-          // ctx.fillStyle = '#ff0000';
-          // ctx.font = '24px serif';
-          // ctx.fillText(
-          //   categoryName.toUpperCase(),
-          //   canvasEl.width * Math.min(...x),
-          //   canvasEl.height * Math.min(...y) - 15
-          // );
+          const { categoryName, score } = gesture;
+          const categoryScore = parseFloat((score * 100).toString()).toFixed(2);
+          const handedness = result.handednesses[0][0].displayName;
+          ctx.fillStyle = "#ff0000";
+          ctx.font = "24px serif";
+          ctx.fillText(
+            categoryName.toUpperCase(),
+            canvasEl.width * Math.min(...x),
+            canvasEl.height * Math.min(...y) - 15
+          );
         }
       }
 

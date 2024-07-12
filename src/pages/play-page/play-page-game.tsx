@@ -1,8 +1,6 @@
 import PlayerIcon from "@/components/icons/player-icon";
 import Navbar from "@/components/navbar";
 import useApi from "@/context/api-context";
-import { GameSuccessSkipResponse } from "@/types/backend/game-success-skip-response";
-import { connect, io } from "socket.io-client";
 import { TyperacerPlayPage } from "./play-page-typeracing";
 import { useEffect, useState } from "react";
 import endpoints from "@/api/endpoint";
@@ -15,10 +13,6 @@ export const GamePlayPage = (props: GamePlayPageProps) => {
   const [gameInformation, setGameInformation] = useState<
     GameInfoResponse | undefined
   >();
-
-  const APIKEY = localStorage.getItem(
-    import.meta.env.VITE_AUTHORIZATION_SESSION
-  );
 
   const { get, user } = useApi();
   useEffect(() => {
@@ -56,8 +50,14 @@ export const GamePlayPage = (props: GamePlayPageProps) => {
         {gameInformation && user && (
           <TyperacerPlayPage
             user={user}
-            gameInformation={gameInformation}
             gameId={props.gameId}
+            expired={gameInformation.expired}
+            questions={gameInformation.question}
+            userGameInformation={
+              gameInformation.gameParticipants.filter(
+                (participant) => participant.userId === user.id
+              )[0]
+            }
           />
         )}
       </div>

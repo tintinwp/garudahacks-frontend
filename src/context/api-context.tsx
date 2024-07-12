@@ -17,18 +17,31 @@ interface ApiContext {
   user: User | null | undefined,
   mutate: MutateApi<any>,
   login: (payload: LoginPayload | RegisterPayload) => Promise<void>
+  logout: () => void;
+  refetchUser: () => void;
 }
 
+const DEFAULT_PROFILE_PICTURE = 'https://t3.ftcdn.net/jpg/03/58/90/78/360_F_358907879_Vdu96gF4XVhjCZxN2kCG0THTsSQi8IhT.jpg';
 const LOCAL_STORAGE_ACCESS_TOKEN_KEY = 'HANDY_KEY'
 const BACKEND_URL = import.meta.env.VITE_BACKEND_API_URL;
 const apiContext = createContext<ApiContext>({} as ApiContext);
 
 export function ApiProvider({children}: ChildrenOnly){
   const [accessToken, setAccessToken] = useState<string | undefined>(localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY) ? localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY) as string : undefined);
-  const { data: user } = useQuery<User | null, Error>('authMe', () => get<User>(endpoints.auth.me), {
-    enabled: !!accessToken
-  });
-
+  const { data: user , refetch } = useQuery<User | null, Error>('authMe', async () => {
+   const resp =  await get<User>(endpoints.auth.me)
+   if(resp && resp.profilePicture == null){
+     resp.profilePicture = DEFAULT_PROFILE_PICTURE
+    }
+  if (resp && resp.profilePicture && !resp.profilePicture.includes('http')) {
+    resp.profilePicture = `${BACKEND_URL}/${resp.profilePicture}`;
+  }
+  return resp;
+  }, {
+    enabled: !!accessToken,
+  }
+);
+ 
   function buildAxios(token?: string){
     const instance =  axios.create({
       baseURL: BACKEND_URL,
@@ -117,8 +130,12 @@ export function ApiProvider({children}: ChildrenOnly){
     }
   }
 
+  function logout(){
+    localStorage.removeItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY)
+  }
+
   async function fetchGuest(){
-    const localStorageData = LOCAL_STORAGE_ACCESS_TOKEN_KEY;
+    const localStorageData = localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
     if(!localStorageData) {
       const resp = await mutate<GenerateUserResponse>(endpoints.auth.generateRequest)
       if(resp){
@@ -132,7 +149,7 @@ export function ApiProvider({children}: ChildrenOnly){
     fetchGuest();
   }, [])
   
-  return <apiContext.Provider value={{ get, mutate, user, login }}>
+  return <apiContext.Provider value={{refetchUser: refetch,logout, get, mutate, user, login }}>
           {children}
     </apiContext.Provider>
 }

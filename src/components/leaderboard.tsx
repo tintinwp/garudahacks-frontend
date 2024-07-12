@@ -12,6 +12,7 @@ import {
 } from "./ui/table";
 import useApi from "@/context/api-context";
 import { useEffect, useRef } from "react";
+import NcImage from "./ui/image";
 
 interface LeaderboardProps {
   leaderboards: LeaderboardType[] | LeaderboardRank[];
@@ -34,7 +35,7 @@ export const Leaderboard = ({ leaderboards }: LeaderboardProps) => {
         `[data-username="${user.username}"]`
       );
       if (currentUserRow) {
-        currentUserRow.scrollIntoView({ behavior: "smooth" });
+        currentUserRow.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
   }, [user]);
@@ -59,6 +60,9 @@ export const Leaderboard = ({ leaderboards }: LeaderboardProps) => {
                   <TableCell className="text-primary">
                     {isRanked ? data.rank : i + 1}
                   </TableCell>
+                  {/* <TableCell className="">
+                    <NcImage className="size-5"/>
+                  </TableCell> */}
                   <TableCell>{data.username}</TableCell>
                   <TableCell>{data.mmr}</TableCell>
                 </TableRow>

@@ -43,6 +43,9 @@ const {mutate: handleLogin} = useMutation<unknown, Error, LoginPayload>({
           type='password'
           className='py-6' placeholder='Password'></Input>
           <Button type='submit'>Login</Button>
+          <p className='text-sm mt-2 text-right text-slate-400'>Didn't have any account ? <span
+          onClick={() => navigate('/register')}
+          className='cursor-pointer hover:underline text-primary'>create account</span> now!</p>
         </form>
     </div>
   )

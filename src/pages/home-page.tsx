@@ -55,7 +55,11 @@ export default function HomePage() {
     for (let i = temp.length - 1; i > startIndex; i--) {
       temp[i].isLocked = true;
     }
-    temp[startIndex].isLast = true;
+
+    if(temp[startIndex]) {
+      temp[startIndex].isLast = true
+    }
+
     return temp;
   }, [unitData, completeOnData]);
 

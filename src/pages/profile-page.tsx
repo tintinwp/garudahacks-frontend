@@ -1,34 +1,27 @@
-import endpoints from "@/api/endpoint";
-import FireIcon from "@/components/icons/fire-icon";
-import { Button } from "@/components/ui/button";
-import useApi from "@/context/api-context";
-import React, { ReactNode } from "react";
-import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
+import endpoints from '@/api/endpoint';
+import CrownIcon from '@/components/icons/crown-icon';
+import { Button } from '@/components/ui/button';
+import useApi from '@/context/api-context';
+import  { ReactNode } from 'react'
+import { useMutation } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
 export default function ProfilePage() {
-  const { user, mutate, refetchUser } = useApi();
-  const navigate = useNavigate();
-  const { mutate: handleUpdateProfle } = useMutation<unknown, Error, FormData>({
-    mutationFn: (payload) =>
-      mutate(endpoints.auth.updateProfilePicture, payload),
-    onSuccess: () => {
-      refetchUser();
-    },
-  });
+  const { user , mutate, refetchUser, logout} = useApi()
+  const navigate = useNavigate()
+  const {mutate: handleUpdateProfle} = useMutation<unknown, Error, FormData>({
+    mutationFn: (payload) => mutate(endpoints.auth.updateProfilePicture, payload),
+    onSuccess:  () => {
+      refetchUser()
+    }
+  })
 
   return (
     <div className="w-full h-full flex flex-col bg-slate-200">
       <div className="px-16 w-full h-full mt-40">
         <div className="w-full h-full bg-white rounded-t-3xl relative">
-          <label
-            htmlFor="image"
-            className="cursor-pointer  size-52 rounded-full absolute left-[50%] translate-x-[-50%] top-0 translate-y-[-50%]"
-          >
-            <img
-              src={user?.profilePicture}
-              className="object-cover size-52 transition-all w-full h-full rounded-full hover:bg-black hover:bg-opacity-50"
-            />
+          <label htmlFor='image' className="cursor-pointer  size-52 rounded-full absolute left-[50%] translate-x-[-50%] top-0 translate-y-[-50%]">
+            <img src={user?.profilePicture} className="object-cover osize-52 transition-all w-full h-full rounded-full hover:bg-black hover:bg-opacity-50" />
             <div className="absolute inset-0 flex items-center justify-center text-white text-opacity-0 hover:text-opacity-100 transition-all font-semibold hover:bg-black hover:bg-opacity-70 rounded-full">
               Select Image
             </div>
@@ -51,9 +44,17 @@ export default function ProfilePage() {
               <h1 className="text-[#636363] font-bold text-2xl truncate">
                 {user?.username}
               </h1>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <Box icon={<FireIcon />} number="1" title="Fire" />
-                <Box icon={<FireIcon />} number={user?.mmr} title="Rating" />
+              <div className="mt-3 grid grid-cols-1 gap-3">
+                {/* <Box
+                  icon={<FireIcon />}
+                  number='1'
+                  title='Fire'
+                /> */}
+                <Box
+                  icon={<CrownIcon className='ml-2 size-8' />}
+                  number={user?.mmr}
+                  title='Rating'
+                />
               </div>
             </div>
             <Button

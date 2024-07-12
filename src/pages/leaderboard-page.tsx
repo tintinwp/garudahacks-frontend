@@ -2,6 +2,7 @@ import endpoints from "@/api/endpoint";
 import { Leaderboard } from "@/components/leaderboard";
 import Loading from "@/components/ui/loading";
 import useApi from "@/context/api-context";
+import { checkUser } from "@/lib/utils";
 import { LeaderboardRank, Leaderboard as LeaderboardType } from "@/types/leaderboard";
 import { AxiosResponse } from "axios";
 import { useEffect, useMemo, useState } from "react";
@@ -18,7 +19,6 @@ export default function LeaderboardPage() {
           endpoints.leaderboard.getRankedLeaderboard
         )) as LeaderboardRank[];
         if (response) {
-          console.log(response);
           setLeaderboardRank(response);
         }
       }
@@ -32,10 +32,11 @@ export default function LeaderboardPage() {
         const response = (await get(
           endpoints.leaderboard.getPaginatedLeaderboard,
           undefined,
-          { pageNumber: 1, perPage: 1000, orderBy: "mmr", direction: "ASC" }
+          { pageNumber: 1, perPage: 1000, orderBy: "mmr", direction: "DESC" }
         )) as AxiosResponse<LeaderboardType[]>;
         if (response) {
           setIsLoading(false)
+          response.data = response.data.map((leaderboard) => checkUser(leaderboard))
           setLeaderboards(response.data);
         }
       }

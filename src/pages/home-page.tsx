@@ -1,4 +1,3 @@
-import FireIcon from "@/components/icons/fire-icon";
 import Topbar from "@/components/topbar";
 import Circle from "@/components/ui/circle";
 import { FaFlag, FaStar } from "react-icons/fa";

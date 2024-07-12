@@ -1,4 +1,3 @@
-import React from 'react'
 import Lottie from 'react-lottie-player'
 import personAnimation from '../../animations/person.json'
 import { useSelector } from 'react-redux'

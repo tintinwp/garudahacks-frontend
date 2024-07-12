@@ -31,7 +31,6 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   const [userGameInformation, setUserGameInformation] = useState<UserGameInfo>(
     props.userGameInformation
   );
-<<<<<<< HEAD
 
   const [refresh, setRefresh] = useState<boolean>(false);
 
@@ -39,9 +38,7 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
     setRefresh((prev) => !prev)
   }, [currentIndex])
 
-=======
   const nav = useNavigate();
->>>>>>> multiplayer-v3
   useEffect(() => {
     if (!socketRef.current) {
       socketRef.current = io(
@@ -114,11 +111,6 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   }, []);
 
   const predictOnVideo = (category: Category) => {
-<<<<<<< HEAD
-    console.log('gesture : ', category.categoryName, ' socket ref : ', socketRef.current)
-=======
-    console.log(currentIndex);
->>>>>>> multiplayer-v3
     if (socketRef.current) {
       console.log(`${category.categoryName.toUpperCase()} === ${props.questions.split("")[currentIndex].toUpperCase()}`)
       if (
@@ -133,11 +125,6 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
           ...prevState,
           successes: [...prevState.successes, currentIndex],
         }));
-<<<<<<< HEAD
-        // console.log('next index!')
-=======
-        console.log("Success beneran ini mah parah");
->>>>>>> multiplayer-v3
         setCurrentIndex(currentIndex + 1);
       }
     }

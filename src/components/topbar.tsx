@@ -1,4 +1,3 @@
-import React from 'react'
 import PlayerIcon from './icons/player-icon'
 
 export default function Topbar() {

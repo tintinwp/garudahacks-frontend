@@ -1,5 +1,4 @@
 import { ChildrenOnly } from '@/types/children-only'
-import React from 'react'
 
 export default function AllLayout({children} : ChildrenOnly) {
   return (

@@ -5,10 +5,12 @@ import {
 import { Table, TableBody, TableCell, TableRow } from "./ui/table";
 import useApi from "@/context/api-context";
 import { useEffect, useRef } from "react";
+import NcImage from "./ui/image";
 
 interface LeaderboardProps {
   leaderboards: LeaderboardType[] | LeaderboardRank[];
   isRanked?: boolean;
+  isShowImage?: boolean;
 }
 
 const isLeaderboardRank = (
@@ -17,7 +19,7 @@ const isLeaderboardRank = (
   return (item as LeaderboardRank).rank !== undefined;
 };
 
-export const Leaderboard = ({ leaderboards }: LeaderboardProps) => {
+export const Leaderboard = ({ leaderboards , isShowImage = true }: LeaderboardProps) => {
   const { user } = useApi();
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -52,9 +54,11 @@ export const Leaderboard = ({ leaderboards }: LeaderboardProps) => {
                   <TableCell className="text-primary">
                     {isRanked ? data.rank : i + 1}
                   </TableCell>
-                  {/* <TableCell className="">
-                    <NcImage className="size-5"/>
-                  </TableCell> */}
+                  {isShowImage &&
+                    <TableCell className="">
+                      <NcImage  src={data.profilePicture} className="rounded-full size-9"/>
+                    </TableCell>
+                  }
                   <TableCell>{data.username}</TableCell>
                   <TableCell>{data.mmr}</TableCell>
                 </TableRow>

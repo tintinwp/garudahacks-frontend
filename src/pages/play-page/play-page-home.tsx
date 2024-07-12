@@ -32,8 +32,10 @@ export const HomePlayPage = (props: HomePlayPageProps) => {
 
   return (
     <>
-      <div className="h-full">
-        <Lottie animationData={PlayAnimation} play />
+      <div className="h-full overflow-y-scroll">
+        <div className="center">
+          <Lottie className="w-[80%]" animationData={PlayAnimation} play />
+        </div>
         <div className="h-1/5">
           <Leaderboard leaderboards={leaderboardRank} isRanked={true} />
         </div>

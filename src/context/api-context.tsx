@@ -11,9 +11,9 @@ export type GetApi<T> = (endpoint: Endpoint, id?: string, queryParameter?: Recor
 export type MutateApi<T> =(endpoint: Endpoint, data?: unknown, id?: string, successMessage?: string) => Promise<T | null>;
 
 interface ApiContext {
-  get: GetApi<unknown>,
+  get: GetApi<any>,
   user: User | null | undefined,
-  mutate: MutateApi<unknown>
+  mutate: MutateApi<any>
 }
 
 const LOCAL_STORAGE_ACCESS_TOKEN_KEY = 'HANDY_KEY'

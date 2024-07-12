@@ -1,9 +1,11 @@
 import React from 'react'
 import Lottie from 'react-lottie-player'
 import personAnimation from '../../animations/person.json'
+import { useSelector } from 'react-redux'
 
 
 export default function QuestionPersonTop() {
+  const { question  } = useSelector((store: any) => store.slice)
   return (
        <div className="flex mt-20">
         <div className="relative w-[238px] h-[240px]">
@@ -17,7 +19,7 @@ export default function QuestionPersonTop() {
             </div>
         </div>
         <div className="center pt-20">
-          <img className='h-40' src='https://upload.wikimedia.org/wikipedia/commons/2/27/Sign_language_A.svg'/>
+          <img className='max-w-[180px] h-40' src={question.questionImage}/>
         </div>
       </div>
   )

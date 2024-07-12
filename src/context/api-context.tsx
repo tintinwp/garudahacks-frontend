@@ -6,6 +6,8 @@ import { ChildrenOnly } from "@/types/children-only";
 import { GenerateUserResponse } from "@/types/backend/responses/generate-user-response";
 import { useQuery } from "react-query";
 import { User } from "@/types/backend/user";
+import { LoginPayload } from "@/types/backend/payload/login-payload";
+import { RegisterPayload } from "@/types/backend/payload/register-payload";
 
 export type GetApi<T> = (endpoint: Endpoint, id?: string, queryParameter?: Record<string, string | number | boolean>) => Promise<T | null>;
 export type MutateApi<T> =(endpoint: Endpoint, data?: unknown, id?: string, successMessage?: string) => Promise<T | null>;
@@ -13,7 +15,8 @@ export type MutateApi<T> =(endpoint: Endpoint, data?: unknown, id?: string, succ
 interface ApiContext {
   get: GetApi<any>,
   user: User | null | undefined,
-  mutate: MutateApi<any>
+  mutate: MutateApi<any>,
+  login: (payload: LoginPayload | RegisterPayload) => Promise<void>
 }
 
 const LOCAL_STORAGE_ACCESS_TOKEN_KEY = 'HANDY_KEY'
@@ -106,6 +109,14 @@ export function ApiProvider({children}: ChildrenOnly){
       return null
   }
 
+  async function login(payload: LoginPayload | RegisterPayload){
+    const response = await mutate<GenerateUserResponse>(endpoints.auth.login, payload)
+    if(response){
+      localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, response.access_token)
+      setAccessToken(response.access_token)
+    }
+  }
+
   async function fetchGuest(){
     const localStorageData = LOCAL_STORAGE_ACCESS_TOKEN_KEY;
     if(!localStorageData) {
@@ -121,7 +132,7 @@ export function ApiProvider({children}: ChildrenOnly){
     fetchGuest();
   }, [])
   
-  return <apiContext.Provider value={{ get, mutate, user }}>
+  return <apiContext.Provider value={{ get, mutate, user, login }}>
           {children}
     </apiContext.Provider>
 }

@@ -29,11 +29,15 @@ const unitEndpoints: UnitEndpoint =  {
 interface AuthEndpoint { 
   me: Endpoint;
   generateRequest: Endpoint;
+  login: Endpoint;
+  register: Endpoint;
 }
 
 const authEndpoints:AuthEndpoint =  {
   generateRequest: createEndpoint('POST', '/auth/generate-guest'),
-  me: createEndpoint('POST', '/auth/me')
+  me: createEndpoint('POST', '/auth/me'),
+  login: createEndpoint('POST', '/auth/sign-in'),
+  register: createEndpoint('POST', '/auth/sign-up')
 }
 
 interface LeaderboardEndpoint {

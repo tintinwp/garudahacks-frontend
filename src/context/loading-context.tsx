@@ -13,7 +13,7 @@ export function LoadingProvider({children}: ChildrenOnly){
   const [isLoading, setIsLoading] = useState<boolean>(false);
   
   return <loadingContext.Provider value={{ setIsLoading }}>
-        {isLoading && <div className="fixed z-[100] top-0 left-0 w-full h-full inset-0 bg-gray-300 bg-opacity-75 transition-opacity">
+        {isLoading && <div className="fixed z-[100] top-0 left-[50%] translate-x-[-50%] w-[500px] h-full inset-0 bg-gray-300 bg-opacity-75 transition-opacity">
           <LoadingIcon className="abs-center" color="white"/>
         </div>}
         <div className={cn(['transition-all', isLoading && 'blur-[1.5px]'])}>

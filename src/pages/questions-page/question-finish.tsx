@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 import finishAnimation from '../../animations/finish.json'
 import Lottie from 'react-lottie-player'
 import { useDispatch, useSelector } from 'react-redux'

@@ -1,3 +1,5 @@
+import { User } from "@/types/backend/user";
+import { Leaderboard } from "@/types/leaderboard";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -47,3 +49,16 @@ const checkInViewIntersectionObserver = ({
 };
 
 export default checkInViewIntersectionObserver;
+
+const DEFAULT_PROFILE_PICTURE = 'https://t3.ftcdn.net/jpg/03/58/90/78/360_F_358907879_Vdu96gF4XVhjCZxN2kCG0THTsSQi8IhT.jpg';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_API_URL;
+
+export function checkUser(user: User | Leaderboard): User | Leaderboard {
+  if(user && user.profilePicture == null){
+    user.profilePicture = DEFAULT_PROFILE_PICTURE
+  }
+  if (user && user.profilePicture && !user.profilePicture.includes('http')) {
+    user.profilePicture = `${BACKEND_URL}/${user.profilePicture}`;
+  }
+  return user;
+}

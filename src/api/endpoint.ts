@@ -1,4 +1,3 @@
-import { EntityAdapterOptions } from "node_modules/@reduxjs/toolkit/dist/entities/models";
 
 type EndpointMethod = 'POST' | 'GET' | 'PUT' | 'DELETE';
 

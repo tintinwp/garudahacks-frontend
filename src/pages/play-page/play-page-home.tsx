@@ -22,7 +22,6 @@ export const HomePlayPage = (props: HomePlayPageProps) => {
           endpoints.leaderboard.getRankedLeaderboard
         )) as LeaderboardRank[];
         if (response) {
-          console.log(response);
           setLeaderboardRank(response);
         }
       }
@@ -37,7 +36,7 @@ export const HomePlayPage = (props: HomePlayPageProps) => {
           <Lottie className="w-[80%]" animationData={PlayAnimation} play />
         </div>
         <div className="h-1/5">
-          <Leaderboard leaderboards={leaderboardRank} isRanked={true} />
+          <Leaderboard isShowImage={false} leaderboards={leaderboardRank} isRanked={true} />
         </div>
         <div className="w-full p-5">
           <div className="text-center">

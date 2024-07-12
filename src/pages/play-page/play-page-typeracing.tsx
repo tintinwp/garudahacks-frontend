@@ -10,7 +10,6 @@ import { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
 import { io, Socket } from "socket.io-client";
 import TimerAnimation from "../../animations/timer-animation.json";
-import { skip } from "node:test";
 
 interface TyperacerPlayPageProps {
   gameId: string;
@@ -107,14 +106,13 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   }, []);
 
   const predictOnVideo = (category: Category) => {
-    console.log('gesture : ', category.categoryName, ' socket ref : ', socketRef.current)
+  
     if (socketRef.current) {
       console.log(`${category.categoryName.toUpperCase()} === ${props.questions.split("")[currentIndex].toUpperCase()}`)
       if (
         category.categoryName.toUpperCase() ==
         props.questions.split("")[currentIndex].toUpperCase()
       ) {
-        console.log("Success");
         socketRef.current.emit("participant-success", {
           gameId: props.gameId,
           index: currentIndex,

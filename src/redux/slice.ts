@@ -42,7 +42,6 @@ const slice = createSlice({
       state.questionFinish = false;
     },
     nextQuestion(state, action: PayloadAction<boolean>) {
-      console.log(action.payload)
       if(action.payload) {
         state.correctAnswer += 1
       }
@@ -51,6 +50,9 @@ const slice = createSlice({
       }
       state.questionIndex += 1
       state.question = state.questions[state.questionIndex]
+      if(state.question) { 
+        console.log('Answer : ', state.question.questionAnswer)
+      }
     }
   },
 });

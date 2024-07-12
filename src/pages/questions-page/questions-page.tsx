@@ -1,11 +1,10 @@
 import endpoints from '@/api/endpoint';
 import { Progress } from '@/components/ui/progress'
 import useApi from '@/context/api-context';
-import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 import QuestionTypeTwo from './question-type-two';
 import QuestionTypeOne from './question-type-one';
-import { useEffect, useInsertionEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Question } from '@/types/backend/question';
 import { useDispatch, useSelector } from 'react-redux';
 import { StoreState } from '@/redux/store';
@@ -32,6 +31,13 @@ export default function QuestionsPage() {
     fetchFirst()
   }, [id])
 
+
+  useEffect(()=> {
+    if(question) { 
+      console.log('Answer : ', question.questionAnswer)
+    }
+  }, [question])
+
   if(!questions || !question || isLoading) {
     if(questionFinish)  {
       return <div className="p-8 h-full"><QuestionFinish/></div>
@@ -39,7 +45,6 @@ export default function QuestionsPage() {
     return <></>
   }
   
-  console.log(question.questionAnswer)
 
   return (
     <div className='p-8 h-full'>

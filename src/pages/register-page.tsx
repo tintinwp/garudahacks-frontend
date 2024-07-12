@@ -3,18 +3,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import useApi from '@/context/api-context'
 import { RegisterPayload } from '@/types/backend/payload/register-payload'
-import { endianness } from 'os'
-import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
 export default function RegisterPage() {
   const { mutate, login } = useApi()
-const { register, handleSubmit, getValues } = useForm<RegisterPayload>();
+const { register, handleSubmit, getValues, formState } = useForm<RegisterPayload>();
 const navigate = useNavigate();
 
-const {mutate: handleRegister} = useMutation<unknown, Error, RegisterPayload>({
+const { mutate: handleRegister } = useMutation<unknown, Error, RegisterPayload>({
     mutationFn: (payload) => mutate(endpoints.auth.register, payload),
     onSuccess:async  () => {
       await login({
@@ -30,6 +28,7 @@ const {mutate: handleRegister} = useMutation<unknown, Error, RegisterPayload>({
         onSubmit={handleSubmit((data) => handleRegister(data))}
         className="flex w-full mx-16 flex-col gap-2">
           <Input 
+          errors={formState.errors}
           {...register('username', {
             required: 'Username is required to register!',
             minLength: {
@@ -39,6 +38,7 @@ const {mutate: handleRegister} = useMutation<unknown, Error, RegisterPayload>({
           })}
           className='py-6' placeholder='Username'></Input>
           <Input 
+          errors={formState.errors}
           {...register('password', {
             required: 'Password is required to register!',
             minLength: {

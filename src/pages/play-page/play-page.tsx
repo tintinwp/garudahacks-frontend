@@ -3,33 +3,31 @@ import React, { useEffect, useState } from "react";
 import { HomePlayPage } from "./play-page-home";
 import { FindingPlayPage } from "./play-page-finding";
 import { MatchFoundPlayPage } from "./play-page-match-found";
+import { GamePlayPage } from "./play-page-game";
 
 export default function PlayPage() {
   const [isFinding, setIsFinding] = useState<boolean>(false);
-  const [isMatchFound, setIsMatchFound] = useState<boolean>(false);
+  const [gameId, setGameId] = useState<string | undefined>();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   return (
     <>
-      {!isFinding && !isMatchFound && (
+      {!isFinding && !gameId && (
         <>
           <HomePlayPage setIsFinding={setIsFinding} />
         </>
       )}
-      {isFinding && !isMatchFound && (
+      {isFinding && !gameId && (
         <>
-          <FindingPlayPage
-            setIsFinding={setIsFinding}
-            setIsMatchFound={setIsMatchFound}
-          />
+          <FindingPlayPage setIsFinding={setIsFinding} setGameId={setGameId} />
         </>
       )}
-      {!isFinding && isMatchFound && !isPlaying && (
+      {!isFinding && gameId && !isPlaying && (
         <>
           <MatchFoundPlayPage setIsPlaying={setIsPlaying} />
         </>
       )}
-      {isPlaying && <>Play Page</>}
+      {isPlaying && gameId && <GamePlayPage gameId={gameId} />}
     </>
   );
 }

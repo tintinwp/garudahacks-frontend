@@ -6,11 +6,13 @@ import { useEffect } from "react";
 
 export interface FindingPlayPageProps {
   setIsFinding: (conds: boolean) => void;
-  setIsMatchFound: (conds: boolean) => void;
+  setGameId: (str: string) => void;
 }
 
 export const FindingPlayPage = (props: FindingPlayPageProps) => {
-  const APIKEY = localStorage.getItem("zeus");
+  const APIKEY = localStorage.getItem(
+    import.meta.env.VITE_AUTHORIZATION_SESSION
+  );
   const socket = io(import.meta.env.VITE_BACKEND_WS_API_URL + "/queues", {
     extraHeaders: {
       Authorization: APIKEY ?? "",
@@ -19,9 +21,9 @@ export const FindingPlayPage = (props: FindingPlayPageProps) => {
 
   useEffect(() => {
     socket.on("connect", () => {
-      socket.on("queue-full", () => {
+      socket.on("queue-full", (data) => {
         props.setIsFinding(false);
-        props.setIsMatchFound(true);
+        props.setGameId(data.gameId);
       });
     });
   }, [socket]);

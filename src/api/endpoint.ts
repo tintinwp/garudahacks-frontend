@@ -43,16 +43,25 @@ const leaderboardEndpoint : LeaderboardEndpoint = {
   getRankedLeaderboard : createEndpoint("GET", "/rank")
 }
 
+interface TyperacingGameEndpoint{
+  getGameInformation : Endpoint
+}
+const typeracingGameEndpoint : TyperacingGameEndpoint = {
+  getGameInformation : createEndpoint("GET", "/games")
+}
+
 interface EndpointList {
   auth: AuthEndpoint;
   unit: UnitEndpoint;
   leaderboard : LeaderboardEndpoint;
+  typeracingGameEndpoint : TyperacingGameEndpoint
 }
 
 const endpoints: EndpointList = {
   auth: authEndpoints,
   unit: unitEndpoints,
-  leaderboard : leaderboardEndpoint
+  leaderboard : leaderboardEndpoint,
+  typeracingGameEndpoint: typeracingGameEndpoint
 };
 
 export default endpoints;

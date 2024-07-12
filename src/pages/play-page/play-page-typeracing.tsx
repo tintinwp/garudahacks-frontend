@@ -48,6 +48,12 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
             console.log(data);
           }
         );
+        socketRef.current!.on(
+          "another-participant-skip",
+          (data: GameSuccessSkipResponse) => {
+            console.log(data);
+          }
+        );
       });
     }
 

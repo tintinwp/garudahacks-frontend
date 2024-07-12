@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import FireIcon from "@/components/icons/fire-icon"
 import Topbar from "@/components/topbar"
 import Circle from "@/components/ui/circle"
@@ -24,29 +23,6 @@ export default function HomePage() {
     const n = unitData.length;
     if(idx === 0 || idx === n - 1){
       return '46%'
-=======
-import FireIcon from "@/components/icons/fire-icon";
-import Topbar from "@/components/topbar";
-import Circle from "@/components/ui/circle";
-import { FaFlag, FaStar } from "react-icons/fa";
-import homeAnimation from "../animations/home.json";
-import Lottie from "react-lottie-player";
-import useApi from "@/context/api-context";
-import { useQuery } from "react-query";
-import endpoints from "@/api/endpoint";
-
-export default function HomePage() {
-  const { get, user } = useApi();
-  const { data } = useQuery("unit", () => get(endpoints.unit.getUnit), {
-    enabled: !!user,
-  });
-  console.log("data : ", data);
-  const circleData = [0, 1, 2, 3, 4];
-  const getLeftPercentage = (idx: number): string => {
-    const n = circleData.length;
-    if (idx === 0 || idx === n - 1) {
-      return "46%";
->>>>>>> play-page-v2
     }
     const mid = Math.floor(n / 2);
     const gapY: { [key: number]: string } = { 1: "30%", 2: "24%" };
@@ -72,7 +48,6 @@ export default function HomePage() {
       </div>
       <div className="py-6">
         <div className="relative flex flex-col gap-8">
-<<<<<<< HEAD
           {unitData?.map((unit, index) => 
               <Link key={index} to={`/questions/${unit.id}`}>
                 <Circle
@@ -81,17 +56,6 @@ export default function HomePage() {
                 </Circle>
               </Link>
           )}
-=======
-          {circleData.map((circle, index) => (
-            <Circle
-              key={index}
-              style={{ left: getLeftPercentage(index) }}
-              className="translate-x-[-50%]"
-            >
-              <FaStar className="size-7 text-white" />
-            </Circle>
-          ))}
->>>>>>> play-page-v2
           <div className="absolute size-[250px] right-10 top-[50%] translate-y-[-50%]">
             <Lottie loop animationData={homeAnimation} play />
           </div>

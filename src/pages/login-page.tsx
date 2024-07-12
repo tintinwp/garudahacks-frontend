@@ -1,26 +1,28 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import useApi from '@/context/api-context';
+import useLoading from '@/context/loading-context';
 import { LoginPayload } from '@/types/backend/payload/login-payload';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
   const { login } = useApi();
+  const { setIsLoading } = useLoading()
 const { register, handleSubmit, formState } = useForm<LoginPayload>();
 const navigate = useNavigate();
 const [error,setError] = useState<string>('')
-const {mutate: handleLogin} = useMutation<unknown, Error, LoginPayload>({
-    mutationFn: (payload) => login(payload),
-    onSuccess:  (response) => {
-      if(response){
-        navigate('/')
-      } 
-      setError('Invalid username or password')
+  async function handleLogin(payload: LoginPayload){
+    setIsLoading(true)
+    if(await login(payload)) {
+      navigate('/')
+    } else {
+      setError('Invalid username or password!')
     }
-  })
+    setIsLoading(false)
+  }
+
   return (
     <div className="w-full h-full center">
       <form

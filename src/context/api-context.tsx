@@ -18,8 +18,8 @@ import {
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogTitle,
+  AlertDialogAction
 } from "@/components/ui/alert-dialog";
-import { AlertDialogAction } from "@radix-ui/react-alert-dialog";
 import { useNavigate } from "react-router-dom";
 
 export type GetApi<T> = (
@@ -224,7 +224,7 @@ export function ApiProvider({ children }: ChildrenOnly) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => nav("/login")}>
+            <AlertDialogAction   onClick={() => nav("/login")}>
               Sign in
             </AlertDialogAction>
             <AlertDialogAction>Continue as Guest</AlertDialogAction>

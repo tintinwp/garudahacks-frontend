@@ -3,9 +3,11 @@ import {
 } from "@mediapipe/tasks-vision";
 import { useEffect, useRef } from "react";
 import Webcam from "react-webcam";
-import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
+import drawUtils from "@mediapipe/drawing_utils";
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
 import useLoading from "@/context/loading-context";
+
+console.log('Draw Utils : ', drawUtils)
 
 interface VideoProps {
   onGetGesture?: (gesture: Category) => void;
@@ -97,11 +99,11 @@ export default function Video({ onGetGesture, refresh = false }: VideoProps) {
         landmarks[i].visibility = 1;
       }
 
-      drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
+      drawUtils.drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
         color: "#00ffff",
         lineWidth: 2,
       });
-      drawLandmarks(ctx, landmarks, {
+      drawUtils.drawLandmarks(ctx, landmarks, {
         color: "#ffff29",
         lineWidth: 1,
       });

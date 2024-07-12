@@ -10,13 +10,30 @@ import { HAND_CONNECTIONS } from "@mediapipe/hands";
 
 interface VideoProps {
   onGetGesture?: (gesture: Category) => void;
+  refresh?: boolean;
 }
 
-export default function Video({ onGetGesture }: VideoProps) {
+export default function Video({ onGetGesture, refresh = false }: VideoProps) {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
   const [recognizer, setRecognizer] = useState<GestureRecognizer>();
+
+  function refreshPredict(){
+
+    function cancelAllAnimationFrames(){
+      let id = window.requestAnimationFrame(function(){});
+      while(id--){
+        window.cancelAnimationFrame(id);
+      }
+   }
+   cancelAllAnimationFrames()
+    predict()
+  }
+
+  useEffect(() => {
+refreshPredict()
+  }, [refresh])
 
   function predict() {
     if (

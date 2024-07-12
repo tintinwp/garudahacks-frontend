@@ -31,6 +31,13 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   const [userGameInformation, setUserGameInformation] = useState<UserGameInfo>(
     props.userGameInformation
   );
+
+  const [refresh, setRefresh] = useState<boolean>(false);
+
+  useEffect(()=> {
+    setRefresh((prev) => !prev)
+  }, [currentIndex])
+
   useEffect(() => {
     if (!socketRef.current) {
       socketRef.current = io(
@@ -100,7 +107,9 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   }, []);
 
   const predictOnVideo = (category: Category) => {
+    console.log('gesture : ', category.categoryName, ' socket ref : ', socketRef.current)
     if (socketRef.current) {
+      console.log(`${category.categoryName.toUpperCase()} === ${props.questions.split("")[currentIndex].toUpperCase()}`)
       if (
         category.categoryName.toUpperCase() ==
         props.questions.split("")[currentIndex].toUpperCase()
@@ -114,14 +123,15 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
           ...prevState,
           successes: [...prevState.successes, currentIndex],
         }));
-        setCurrentIndex((prev) => prev + 1);
+        // console.log('next index!')
+        setCurrentIndex(currentIndex + 1);
       }
     }
   };
 
+
   const skipCharacter = () => {
     if (socketRef.current) {
-      console.log("SKIP");
       socketRef.current.emit("participant-skip", {
         gameId: props.gameId,
         index: currentIndex,
@@ -130,14 +140,9 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
         ...prevState,
         skips: [...prevState.skips, currentIndex],
       }));
-      setCurrentIndex((prev) => prev + 1);
+      setCurrentIndex(currentIndex + 1);
     }
   };
-
-  useEffect(() => {
-    console.log("Enemy current index  = " + enemyCurrentIndex);
-    console.log("User current index : " + currentIndex);
-  }, [enemyCurrentIndex, currentIndex]);
 
   return (
     <div className="flex flex-col h-full">
@@ -175,7 +180,7 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
         <Separator className="bg-gray-400" />
       </div>
       <div className="p-4 w-full h-full">
-        <Video onGetGesture={predictOnVideo} />
+        <Video refresh={refresh} onGetGesture={predictOnVideo} />
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+import { EntityAdapterOptions } from "node_modules/@reduxjs/toolkit/dist/entities/models";
+
 type EndpointMethod = 'POST' | 'GET' | 'PUT' | 'DELETE';
 
 export interface Endpoint {
@@ -29,11 +31,17 @@ const unitEndpoints: UnitEndpoint =  {
 interface AuthEndpoint { 
   me: Endpoint;
   generateRequest: Endpoint;
+  login: Endpoint;
+  register: Endpoint;
+  updateProfilePicture: Endpoint;
 }
 
 const authEndpoints:AuthEndpoint =  {
   generateRequest: createEndpoint('POST', '/auth/generate-guest'),
-  me: createEndpoint('POST', '/auth/me')
+  me: createEndpoint('POST', '/auth/me'),
+  login: createEndpoint('POST', '/auth/sign-in'),
+  register: createEndpoint('POST', '/auth/sign-up'),
+  updateProfilePicture: createEndpoint('PUT', '/users/upload-profile-picture')
 }
 
 interface LeaderboardEndpoint {

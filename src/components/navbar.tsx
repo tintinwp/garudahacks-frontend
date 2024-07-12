@@ -2,8 +2,10 @@ import ThropyIcon from "./icons/thropy-icon";
 import ProfileIcon from "./icons/profile-icon";
 import HomeIcon from "./icons/home-icon";
 import PlayIcon from "./icons/play-icon";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChildrenOnly } from "@/types/children-only";
+import { useMemo } from "react";
+import { cn } from "@/lib/utils";
 
 export default function Navbar() {
   return (
@@ -29,5 +31,14 @@ interface NavLinkProps extends ChildrenOnly {
 }
 
 function NavLink({to, children}: NavLinkProps){
-  return (<Link className="p-2 transition-all hover:bg-slate-200 hover:bg-opacity-50 rounded-xl" to={to}>{children}</Link>)
+  const location = useLocation()
+  const isActive = useMemo(() => {
+    const {pathname} = location;
+    if(to === '/' && pathname === '/') {
+      return true
+    } else if(pathname == to){
+      return true
+    }
+  }, [location])
+  return (<Link className={cn(['p-2 transition-all hover:bg-slate-200 hover:bg-opacity-50 rounded-xl', isActive ? 'bg-slate-200 bg-opacity-50' : ''])} to={to}>{children}</Link>)
 }

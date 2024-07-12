@@ -6,6 +6,8 @@ import { ChildrenOnly } from "@/types/children-only";
 import { GenerateUserResponse } from "@/types/backend/responses/generate-user-response";
 import { useQuery } from "react-query";
 import { User } from "@/types/backend/user";
+import { LoginPayload } from "@/types/backend/payload/login-payload";
+import { RegisterPayload } from "@/types/backend/payload/register-payload";
 
 export type GetApi<T> = (endpoint: Endpoint, id?: string, queryParameter?: Record<string, string | number | boolean>) => Promise<T | null>;
 export type MutateApi<T> =(endpoint: Endpoint, data?: unknown, id?: string, successMessage?: string) => Promise<T | null>;
@@ -13,19 +15,33 @@ export type MutateApi<T> =(endpoint: Endpoint, data?: unknown, id?: string, succ
 interface ApiContext {
   get: GetApi<any>,
   user: User | null | undefined,
-  mutate: MutateApi<any>
+  mutate: MutateApi<any>,
+  login: (payload: LoginPayload | RegisterPayload) => Promise<void>
+  logout: () => void;
+  refetchUser: () => void;
 }
 
+const DEFAULT_PROFILE_PICTURE = 'https://t3.ftcdn.net/jpg/03/58/90/78/360_F_358907879_Vdu96gF4XVhjCZxN2kCG0THTsSQi8IhT.jpg';
 const LOCAL_STORAGE_ACCESS_TOKEN_KEY = 'HANDY_KEY'
 const BACKEND_URL = import.meta.env.VITE_BACKEND_API_URL;
 const apiContext = createContext<ApiContext>({} as ApiContext);
 
 export function ApiProvider({children}: ChildrenOnly){
   const [accessToken, setAccessToken] = useState<string | undefined>(localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY) ? localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY) as string : undefined);
-  const { data: user } = useQuery<User | null, Error>('authMe', () => get<User>(endpoints.auth.me), {
-    enabled: !!accessToken
-  });
-
+  const { data: user , refetch } = useQuery<User | null, Error>('authMe', async () => {
+   const resp =  await get<User>(endpoints.auth.me)
+   if(resp && resp.profilePicture == null){
+     resp.profilePicture = DEFAULT_PROFILE_PICTURE
+    }
+  if (resp && resp.profilePicture && !resp.profilePicture.includes('http')) {
+    resp.profilePicture = `${BACKEND_URL}/${resp.profilePicture}`;
+  }
+  return resp;
+  }, {
+    enabled: !!accessToken,
+  }
+);
+ 
   function buildAxios(token?: string){
     const instance =  axios.create({
       baseURL: BACKEND_URL,
@@ -106,11 +122,26 @@ export function ApiProvider({children}: ChildrenOnly){
       return null
   }
 
+  async function login(payload: LoginPayload | RegisterPayload){
+    const response = await mutate<GenerateUserResponse>(endpoints.auth.login, payload)
+    if(response){
+      localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, response.access_token)
+      setAccessToken(response.access_token)
+    }
+  }
+
+  function logout(){
+    localStorage.removeItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY)
+  }
+
   async function fetchGuest(){
-    const resp = await mutate<GenerateUserResponse>(endpoints.auth.generateRequest)
-    if(resp){
-      localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, resp.access_token)
-      setAccessToken(resp.access_token)
+    const localStorageData = localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY);
+    if(!localStorageData) {
+      const resp = await mutate<GenerateUserResponse>(endpoints.auth.generateRequest)
+      if(resp){
+        localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_KEY, resp.access_token)
+        setAccessToken(resp.access_token)
+      }
     }
   }
 
@@ -118,7 +149,7 @@ export function ApiProvider({children}: ChildrenOnly){
     fetchGuest();
   }, [])
   
-  return <apiContext.Provider value={{ get, mutate, user }}>
+  return <apiContext.Provider value={{refetchUser: refetch,logout, get, mutate, user, login }}>
           {children}
     </apiContext.Provider>
 }

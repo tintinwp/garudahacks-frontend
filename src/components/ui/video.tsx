@@ -1,6 +1,5 @@
 import {
   Category,
-  FilesetResolver, GestureRecognizer
 } from "@mediapipe/tasks-vision";
 import { useEffect, useRef } from "react";
 import Webcam from "react-webcam";

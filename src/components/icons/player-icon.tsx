@@ -1,7 +1,7 @@
 import { forwardRef, HTMLAttributes } from "react"
 
 interface PlayerIconProps extends HTMLAttributes<HTMLOrSVGElement> { 
-
+  
 }
 
 const PlayerIcon = forwardRef<SVGSVGElement, PlayerIconProps>(({...props}, ref) => {

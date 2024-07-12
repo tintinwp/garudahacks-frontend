@@ -19,6 +19,9 @@ export default {
       },
     },
     extend: {
+      screens: {
+        'xs' : '330px'
+      },
       colors: {
         primary: "#FF9B19",
         "primary-200": "#FF8400",

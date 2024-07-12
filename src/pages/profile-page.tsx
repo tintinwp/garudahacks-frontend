@@ -18,10 +18,10 @@ export default function ProfilePage() {
 
   return (
     <div className="w-full h-full flex flex-col bg-slate-200">
-      <div className="px-16 w-full h-full mt-40">
+      <div className="px-8 w-full h-full mt-40">
         <div className="w-full h-full bg-white rounded-t-3xl relative">
-          <label htmlFor='image' className="cursor-pointer  size-52 rounded-full absolute left-[50%] translate-x-[-50%] top-0 translate-y-[-50%]">
-            <img src={user?.profilePicture} className="object-cover osize-52 transition-all w-full h-full rounded-full hover:bg-black hover:bg-opacity-50" />
+          <label htmlFor='image' className="cursor-pointer  size-40 rounded-full absolute left-[50%] translate-x-[-50%] top-0 translate-y-[-50%]">
+            <img src={user?.profilePicture} className="object-cover size-40 transition-all w-full h-full rounded-full hover:bg-black hover:bg-opacity-50" />
             <div className="absolute inset-0 flex items-center justify-center text-white text-opacity-0 hover:text-opacity-100 transition-all font-semibold hover:bg-black hover:bg-opacity-70 rounded-full">
               Select Image
             </div>

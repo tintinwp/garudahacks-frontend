@@ -11,10 +11,13 @@ import { StoreState } from '@/redux/store';
 import { setQuestions } from '@/redux/slice';
 import QuestionTypeThree from './question-type-three';
 import QuestionFinish from './question-finish';
-
+import useSound from 'use-sound';
+import successSfx from '../../sounds/success.mp3';
 
 export default function QuestionsPage() {
   const dispatch = useDispatch();
+  const [play] = useSound(successSfx, {interrupt: false});
+
   const {questions, question, questionIndex, questionFinish} = useSelector((store: StoreState) => store.slice)
   const {id} = useParams();
   const { get } = useApi();
@@ -30,6 +33,12 @@ export default function QuestionsPage() {
   useEffect(() => {
     fetchFirst()
   }, [id])
+
+  useEffect(() => {
+    if(questionIndex !== 0) {
+      play()
+    }
+  }, [questionIndex])
 
 
   useEffect(()=> {

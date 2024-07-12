@@ -8,7 +8,7 @@ import { useQuery } from "react-query";
 import endpoints from "@/api/endpoint";
 import { Unit } from "@/types/backend/unit";
 import { useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,7 +23,7 @@ import Loading from "@/components/ui/loading";
 export default function HomePage() {
   const { get, user } = useApi();
   const navigate = useNavigate();
-  const { data: unitData, isLoading: isUnitLoading } = useQuery<Unit[], Error>(
+  const { data: unitData, isLoading: isUnitLoading, refetch: refetchUnitData } = useQuery<Unit[], Error>(
     "unit",
     () => get(endpoints.unit.getUnit) as Promise<Unit[]>,
     {
@@ -31,7 +31,8 @@ export default function HomePage() {
     }
   );
 
-  const { data: completeOnData, isLoading: isCompleteLoading } = useQuery<
+
+  const { data: completeOnData, isLoading: isCompleteLoading, refetch: refetchCompleteOnData } = useQuery<
     string[],
     Error
   >("completeOnUnits", () => get(endpoints.unit.completeOn), {
@@ -80,6 +81,12 @@ export default function HomePage() {
     }
     return true;
   }, [filteredData]);
+
+
+  useEffect(() => {
+    refetchCompleteOnData()
+    refetchUnitData()
+  }, [user])
 
   if (isUnitLoading || isCompleteLoading || filteredData.length == 0)
     return (

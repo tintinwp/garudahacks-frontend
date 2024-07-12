@@ -5,13 +5,16 @@ import Video from "@/components/ui/video";
 import { UserGameInfo } from "@/types/backend/game-info-response";
 import { GameSuccessSkipResponse } from "@/types/backend/game-success-skip-response";
 import { User } from "@/types/backend/user";
-import { Category, GestureRecognizer } from "@mediapipe/tasks-vision";
+import { Category } from "@mediapipe/tasks-vision";
 import { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie-player";
 import { io, Socket } from "socket.io-client";
 import TimerAnimation from "../../animations/timer-animation.json";
 import { useNavigate } from "react-router-dom";
 import { checkingText } from "@/lib/utils";
+import useLoading from "@/context/loading-context";
+import useSound from 'use-sound';
+import successSfx from '../../sounds/success.mp3'
 
 interface TyperacerPlayPageProps {
   gameId: string;
@@ -25,6 +28,7 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   const APIKEY = localStorage.getItem(
     import.meta.env.VITE_AUTHORIZATION_SESSION
   );
+  const { setIsFinish } = useLoading()
   const socketRef = useRef<Socket | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [gesture, setGesture] = useState<Category>();
@@ -33,6 +37,8 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   const [userGameInformation, setUserGameInformation] = useState<UserGameInfo>(
     props.userGameInformation
   );
+  const [play] = useSound(successSfx, {interrupt: false});
+
 
   const [refresh, setRefresh] = useState<boolean>(false);
 
@@ -98,6 +104,7 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
   useEffect(() => {
     if (currentTimeDiff <= 0 || currentIndex >= props.questions.length) {
       nav("/home");
+      setIsFinish(true)
     }
   }, [currentTimeDiff, currentIndex]);
 
@@ -122,6 +129,7 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
       if (
         checkingText(category.categoryName, props.questions.charAt(currentIndex).toString())
       ) {
+        play()
         socketRef.current.emit("participant-success", {
           gameId: props.gameId,
           index: currentIndex,
@@ -137,10 +145,12 @@ export const TyperacerPlayPage = (props: TyperacerPlayPageProps) => {
 
   const skipCharacter = () => {
     if (socketRef.current) {
-      socketRef.current.emit("participant-skip", {
-        gameId: props.gameId,
-        index: currentIndex,
-      });
+      if(currentIndex < props.questions.length){
+        socketRef.current.emit("participant-skip", {
+          gameId: props.gameId,
+          index: currentIndex,
+        });
+      }
       setUserGameInformation((prevState) => ({
         ...prevState,
         skips: [...prevState.skips, currentIndex],
